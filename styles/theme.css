@@ -1,0 +1,17 @@
+/* Tema claro */
+.theme-light {
+  background-color: white !important;
+  color: black !important;
+}
+.theme-light .highlight {
+  color: green !important;
+}
+
+/* Tema oscuro */
+.theme-dark {
+  background-color: #111 !important;
+  color: white !important;
+}
+.theme-dark .highlight {
+  color: yellow !important;
+}
