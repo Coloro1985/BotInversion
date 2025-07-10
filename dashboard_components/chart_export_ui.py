@@ -5,6 +5,10 @@ import io
 def render_chart_export_section(df_filtered, selected_coin):
     st.subheader("📤 Exportar datos de la criptomoneda seleccionada")
 
+    if not isinstance(df_filtered, pd.DataFrame):
+        st.error("❌ Los datos proporcionados no son un DataFrame válido.")
+        return
+
     if df_filtered.empty:
         st.warning("⚠️ No hay datos disponibles para exportar.")
         return
@@ -22,4 +26,5 @@ def render_chart_export_section(df_filtered, selected_coin):
         data=buffer,
         file_name=filename,
         mime="text/csv",
+        help="Haz clic para descargar los datos filtrados en formato CSV."
     )

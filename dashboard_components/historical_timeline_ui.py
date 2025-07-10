@@ -4,6 +4,8 @@ import plotly.graph_objects as go
 import streamlit as st
 
 def render_historical_timeline(csv_files):
+    st.markdown("---")
+    st.markdown("---")
     st.subheader("📆 Evolución cronológica de señales")
 
     try:
@@ -12,9 +14,9 @@ def render_historical_timeline(csv_files):
             try:
                 df_temp = pd.read_csv(file)
                 if {'Coin', 'Signal'}.issubset(df_temp.columns):
-                    df_temp['archivo'] = os.path.basename(file)
+                    df_temp['Archivo'] = os.path.basename(file)
                     df_temp['fecha'] = pd.to_datetime(file.split("_")[-1].replace(".csv", ""), format="%Y-%m-%d_%H-%M-%S", errors='coerce')
-                    historical_data.append(df_temp[['fecha', 'Coin', 'Signal']])
+                    historical_data.append(df_temp[['fecha', 'Coin', 'Signal', 'Archivo']])
             except Exception as e:
                 st.warning(f"Error leyendo archivo {file}: {e}")
 
@@ -34,11 +36,12 @@ def render_historical_timeline(csv_files):
                 ))
 
             fig_timeline.update_layout(
-                title="Cantidad de señales por tipo a lo largo del tiempo",
+                title="📊 Cantidad de señales por tipo a lo largo del tiempo",
                 xaxis_title="Fecha",
                 yaxis_title="Cantidad de señales",
                 barmode='stack',
-                height=500
+                height=500,
+                margin=dict(l=20, r=20, t=50, b=80)
             )
 
             st.plotly_chart(fig_timeline, use_container_width=True)

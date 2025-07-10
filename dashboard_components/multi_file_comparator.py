@@ -28,4 +28,12 @@ def render_multi_file_comparator(csv_files, reports_dir="reports"):
     if data_frames:
         df_combined = pd.concat(data_frames, ignore_index=True)
         st.subheader("Vista previa combinada de archivos seleccionados")
-        st.dataframe(df_combined)
+        with st.expander("Ver archivos combinados"):
+            st.dataframe(df_combined)
+            csv = df_combined.to_csv(index=False).encode("utf-8")
+            st.download_button(
+                label="📥 Descargar archivo combinado",
+                data=csv,
+                file_name="comparacion_archivos.csv",
+                mime="text/csv"
+            )

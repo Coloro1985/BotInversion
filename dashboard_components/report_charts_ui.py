@@ -17,10 +17,17 @@ def render_technical_charts_from_report(df_report: pd.DataFrame):
                 continue
 
             fig = go.Figure()
-            fig.add_trace(go.Scatter(x=df.index, y=df['close'], mode='lines', name='Close'))
-            fig.add_trace(go.Scatter(x=df.index, y=df['ema_50'], mode='lines', name='EMA 50'))
-            fig.add_trace(go.Scatter(x=df.index, y=df['ema_200'], mode='lines', name='EMA 200'))
-            fig.update_layout(title=f"{coin} - Precios y EMAs", xaxis_title="Fecha", yaxis_title="Precio (USD)")
+            fig.add_trace(go.Scatter(x=df.index, y=df['close'], mode='lines', name='Precio de Cierre'))
+            fig.add_trace(go.Scatter(x=df.index, y=df['ema_50'], mode='lines', name='Media Móvil (EMA 50)'))
+            fig.add_trace(go.Scatter(x=df.index, y=df['ema_200'], mode='lines', name='Media Móvil (EMA 200)'))
+            fig.update_layout(
+                title=f"{coin} - Gráfico de Precio y Medias Móviles",
+                xaxis_title="Fecha",
+                yaxis_title="Precio (USD)",
+                template="plotly_white",
+                xaxis=dict(showgrid=True),
+                yaxis=dict(showgrid=True)
+            )
             st.plotly_chart(fig, use_container_width=True)
         except Exception as e:
-            st.error(f"Error al cargar datos técnicos para {coin}: {e}")
+            st.exception(f"Ocurrió un error al cargar los datos técnicos para {coin}")

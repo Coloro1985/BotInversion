@@ -33,12 +33,12 @@ from dashboard_components.export_utils import build_filtered_csv_export, render_
 from dashboard_components.favorites_ui import render_favorites_section
 from dashboard_components.filters_ui import render_filters_section
 from dashboard_components.historical_timeline_ui import render_historical_timeline
-from dashboard_components.multi_file_comparator import render_multi_file_comparator
-from dashboard_components.report_charts_ui import render_technical_charts_from_report
-from dashboard_components.reporting_ui import render_reporting_tools
-from dashboard_components.saved_reports_ui import render_saved_report_section
-from dashboard_components.signal_summary_ui import render_signal_summary_section
 from dashboard_components.technical_chart_ui import render_technical_analysis_section
+from dashboard_components.report_charts_ui import render_technical_charts_from_report
+from dashboard_components.multi_file_comparator import render_multi_file_comparator
+from dashboard_components.reporting_ui import render_reporting_tools
+from dashboard_components.saved_reports_ui import render_saved_reports_view
+from dashboard_components.signal_summary_ui import render_signal_summary_section
 
 
 # Usar función utilitaria para asegurar directorios
@@ -100,31 +100,25 @@ if not csv_files:
 # Seleccionar el archivo más reciente
 selected_report_file = st.selectbox("Selecciona un archivo de señales:", csv_files)
 
-# Validación del archivo seleccionado
-if (
-    not selected_report_file
-    or not selected_report_file.endswith(".csv")
-    or selected_report_file not in csv_files
-    or not os.path.exists(selected_report_file)
-):
-    st.error("❌ El archivo seleccionado no es válido o no se encuentra.")
-    st.stop()
+# Validar y cargar el archivo CSV seleccionado
+df_full = None
+if selected_report_file and selected_report_file.endswith(".csv") and os.path.exists(selected_report_file):
+    try:
+        df_full = pd.read_csv(selected_report_file)
 
-# Mostrar la fecha de creación del archivo seleccionado
-creation_time = os.path.getctime(selected_report_file)
-formatted_date = datetime.fromtimestamp(creation_time).strftime("%Y-%m-%d %H:%M:%S")
-st.caption(f"🕒 Fecha de creación del archivo seleccionado: {formatted_date}")
+        if df_full.empty or df_full.columns.size == 0:
+            st.error("⚠️ El archivo seleccionado está vacío o no contiene columnas válidas.")
+            st.stop()
 
-# Nuevo bloque para leer el archivo CSV con manejo robusto de errores
-try:
-    df_full = pd.read_csv(os.path.join("reports", os.path.basename(selected_report_file)))
+        creation_time = os.path.getctime(selected_report_file)
+        formatted_date = datetime.fromtimestamp(creation_time).strftime("%Y-%m-%d %H:%M:%S")
+        st.caption(f"🕒 Fecha de creación del archivo seleccionado: {formatted_date}")
 
-    if df_full.empty or df_full.columns.size == 0:
-        st.error("⚠️ El archivo seleccionado está vacío o no contiene columnas válidas.")
+    except Exception as e:
+        st.error(f"❌ Error al leer el archivo: {e}")
         st.stop()
-
-except Exception as e:
-    st.error(f"❌ Error al leer el archivo: {e}")
+else:
+    st.error("❌ El archivo seleccionado no es válido o no se encuentra.")
     st.stop()
 
 # Mostrar título y descripción
@@ -137,53 +131,76 @@ missing_columns = [col for col in expected_columns if col not in df_full.columns
 if missing_columns:
     st.warning(f"⚠️ Faltan las siguientes columnas esperadas en el archivo: {', '.join(missing_columns)}")
 
-
-# --- Secciones visuales del Dashboard ---
-render_signal_summary_section(df_full)
+st.sidebar.markdown("🧭 **Navegación**")
+secciones = [
+    "Resumen de Señales",
+    "Filtros y Reportes",
+    "Comparativa de Criptomonedas",
+    "Análisis Técnico",
+    "Correlación",
+    "Reportes Guardados",
+    "Favoritos",
+    "Gráficos del Reporte",
+    "Comparación de Archivos",
+    "Exportar Señales",
+    "Exportar Gráfico Individual"
+]
+seccion_seleccionada = st.sidebar.radio("Selecciona una sección:", secciones)
 
 page_size = 25  # Número de filas por página
-filtered_df, rsi_min, rsi_max, macd_min, macd_max, macd_sig_min, macd_sig_max, volumen_slider_min, volumen_slider_max = render_filters_section(df_full)
 
-selected_coin = st.selectbox("Selecciona una criptomoneda:", sorted(df_full["Coin"].unique()))
+if seccion_seleccionada == "Resumen de Señales":
+    render_signal_summary_section(df_full)
 
-render_reporting_tools(filtered_df, selected_report_file)
+if seccion_seleccionada == "Filtros y Reportes":
+    filtered_df, rsi_min, rsi_max, macd_min, macd_max, macd_sig_min, macd_sig_max, volumen_slider_min, volumen_slider_max = render_filters_section(df_full)
+    selected_coin = st.selectbox("Selecciona una criptomoneda:", sorted(df_full["Coin"].unique()))
+    render_reporting_tools(filtered_df, selected_report_file)
+    total_rows = filtered_df.shape[0]
+    total_pages = (total_rows // page_size) + int(total_rows % page_size > 0)
+    if total_pages > 0:
+        page = st.number_input("📄 Página:", min_value=1, max_value=total_pages, step=1)
+        start_idx = (page - 1) * page_size
+        end_idx = start_idx + page_size
+        st.dataframe(filtered_df.iloc[start_idx:end_idx])
+    else:
+        st.warning("No hay resultados para mostrar.")
 
-total_rows = filtered_df.shape[0]
-total_pages = (total_rows // page_size) + int(total_rows % page_size > 0)
-if total_pages > 0:
-    page = st.number_input("📄 Página:", min_value=1, max_value=total_pages, step=1)
-    start_idx = (page - 1) * page_size
-    end_idx = start_idx + page_size
-    st.dataframe(filtered_df.iloc[start_idx:end_idx])
-else:
-    st.warning("No hay resultados para mostrar.")
+    with st.expander("📤 Exportar búsqueda filtrada", expanded=False):
+        render_export_filtered_csv_button(filtered_df)
 
-# Exportar datos filtrados como CSV
-with st.expander("📤 Exportar búsqueda filtrada", expanded=False):
-    render_export_filtered_csv_button(filtered_df)
-
-with st.expander("🗃️ Guardar reporte filtrado", expanded=False):
-    render_saved_report_section(filtered_df, selected_report_file)
-
-# Exportar todas las señales (bloque UI modular)
-render_export_all_signals_section(df_full, selected_report_file)
-
-
-with st.expander("📊 Comparativa de Criptomonedas", expanded=False):
+if seccion_seleccionada == "Comparativa de Criptomonedas":
     render_comparative_charts(df_full)
 
-# --- Sección de análisis técnico modularizada ---
-render_technical_analysis_section(selected_coin, df_full)
+if seccion_seleccionada == "Análisis Técnico":
+    selected_coin = st.selectbox("Selecciona una criptomoneda:", sorted(df_full["Coin"].unique()))
+    render_technical_analysis_section(selected_coin, df_full)
 
+if seccion_seleccionada == "Correlación":
+    selected_coin = st.selectbox("Selecciona una criptomoneda:", sorted(df_full["Coin"].unique()))
+    render_correlation_section(df_full, selected_coin)
 
-with st.expander("🔗 Correlación entre Criptomonedas", expanded=False):
-    render_correlation_section(df_full)
+if seccion_seleccionada == "Reportes Guardados":
+    filtered_df, rsi_min, rsi_max, macd_min, macd_max, macd_sig_min, macd_sig_max, volumen_slider_min, volumen_slider_max = render_filters_section(df_full)
+    render_saved_reports_view(filtered_df, selected_report_file)
 
+if seccion_seleccionada == "Favoritos":
+    render_favorites_section(df_full)
+
+if seccion_seleccionada == "Gráficos del Reporte":
+    render_technical_charts_from_report(df_full)
+
+if seccion_seleccionada == "Comparación de Archivos":
+    render_multi_file_comparator()
+
+if seccion_seleccionada == "Exportar Señales":
+    render_export_all_signals_section(df_full, selected_report_file)
+
+if seccion_seleccionada == "Exportar Gráfico Individual":
+    selected_coin = st.selectbox("Selecciona una criptomoneda:", sorted(df_full["Coin"].unique()))
+    render_chart_export_section(selected_coin, df_full)
 
 render_historical_timeline(csv_files)
-
-
-render_favorites_section(df_full)
 
 # --- Información de la versión ---
 st.markdown("---")
@@ -205,9 +222,6 @@ process = psutil.Process(os.getpid())
 mem_info = process.memory_info()
 mem_used_mb = mem_info.rss / (1024 * 1024)
 st.caption(f"💾 Memoria usada: {mem_used_mb:.2f} MB")
-
-with st.expander("📈 Exportar gráfico individual", expanded=False):
-    render_chart_export_section(selected_coin, df_full)
 
 @atexit.register
 def close_event_loop():

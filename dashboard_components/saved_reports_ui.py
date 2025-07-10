@@ -2,7 +2,7 @@ import os
 import streamlit as st
 import pandas as pd
 
-def render_saved_reports_view(df):
+def render_saved_reports_view():
     st.header("📁 Reportes Guardados")
 
     reports_dir = "reports"
