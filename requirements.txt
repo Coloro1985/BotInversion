@@ -48,3 +48,4 @@ validators==0.28.1
 watchdog==4.0.1
 zipp==3.18.2
 loguru==0.7.2
+seaborn>=0.12.2

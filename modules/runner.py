@@ -88,7 +88,7 @@ def mostrar_balance():
 🔔 {entry['Signal']}
 """)
 
-    exportar_resultados_csv(top_signals_sorted)
+    exportar_resultados_csv(top_signals_sorted, output_dir="reports")
     limpiar_archivos_csv("logs/historial")
     alerts = check_price_alerts(coins, SYMBOL_MAP, binance_client)
     if alerts:

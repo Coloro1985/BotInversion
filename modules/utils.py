@@ -125,7 +125,7 @@ def exportar_resultados_csv(top_signals_sorted):
         print("⚠️ No se exportaron señales ya que no hay datos disponibles.")
         return
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    output_dir = os.path.join(base_dir, "reports")
+    output_dir = os.path.abspath(os.path.join(os.path.dirname(base_dir), "reports"))
     os.makedirs(output_dir, exist_ok=True)
     df_export = pd.DataFrame(top_signals_sorted)
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
