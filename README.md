@@ -121,13 +121,13 @@ Este proyecto sigue el estándar [Semantic Versioning](https://semver.org/).
 ### Versión actual: `v1.1.1` (2025-07-09)
 
 #### Cambios:
-- Incorporación del dashboard modular con componentes visuales distribuidos en `dashboard_components/`.
-- Nuevas funcionalidades de exportación desde la interfaz (`export_all_signals_ui`, `chart_export_ui`).
-- Añadido sistema de favoritos persistentes mediante `favoritas.json`.
-- Agregadas visualizaciones de correlación y gráficas técnicas con `seaborn` y `matplotlib`.
-- Soporte para comparar múltiples archivos de señales y filtrar por indicadores clave (RSI, MACD, volumen).
-- Refactor y separación de lógica en módulos reutilizables.
-- Correcciones menores de estilo y mejoras de legibilidad del código.
+- Se implementó un dashboard modular con componentes organizados en `dashboard_components/`, facilitando el mantenimiento y la escalabilidad del sistema.
+- Nuevas funcionalidades de exportación de datos, incluyendo opciones desde la interfaz (`export_all_signals_ui`, `chart_export_ui`) para mejorar la experiencia del usuario.
+- Sistema de gestión de favoritos persistente mediante el archivo `favoritas.json` en `data/`.
+- Visualizaciones de correlación y gráficos técnicos con `seaborn` y `matplotlib`, agregando análisis visual más avanzado.
+- Comparador de múltiples archivos de señales con filtros personalizables (RSI, MACD, volumen, etc.).
+- Refactorización del código para separar lógica, mejorar la reutilización y legibilidad.
+- Optimización del diseño visual y la usabilidad general del dashboard.
 
 ## 📝 Licencia
 
