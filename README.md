@@ -118,15 +118,16 @@ Ethereum,ETHUSDT,ethereum
 
 Este proyecto sigue el estándar [Semantic Versioning](https://semver.org/).
 
-### Versión actual: `v1.1.0` (2025-07-08)
+### Versión actual: `v1.1.1` (2025-07-09)
 
 #### Cambios:
-- Modularización completa del código.
-- Separación de estrategias en la carpeta `strategies/`.
-- Reubicación de rutas para exportación de reportes a `reports/` en el directorio raíz.
-- Corrección en la carga del archivo `symbol_map.csv`.
-- Manejo adecuado de directorios inexistentes al guardar archivos.
-- Mejora del `README.md` y documentación general del proyecto.
+- Incorporación del dashboard modular con componentes visuales distribuidos en `dashboard_components/`.
+- Nuevas funcionalidades de exportación desde la interfaz (`export_all_signals_ui`, `chart_export_ui`).
+- Añadido sistema de favoritos persistentes mediante `favoritas.json`.
+- Agregadas visualizaciones de correlación y gráficas técnicas con `seaborn` y `matplotlib`.
+- Soporte para comparar múltiples archivos de señales y filtrar por indicadores clave (RSI, MACD, volumen).
+- Refactor y separación de lógica en módulos reutilizables.
+- Correcciones menores de estilo y mejoras de legibilidad del código.
 
 ## 📝 Licencia
 
