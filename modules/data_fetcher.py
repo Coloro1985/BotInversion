@@ -55,7 +55,10 @@ import pandas as pd
 
 # Nueva función para obtener las principales criptomonedas por capitalización de mercado desde CoinGecko
 def get_top_cryptos(limit=10):
-    """Devuelve una lista de las principales criptomonedas por capitalización de mercado desde CoinGecko."""
+    """
+    Devuelve una lista de las principales criptomonedas por capitalización de mercado.
+    Cada elemento es un diccionario con 'id', 'symbol', y 'name'.
+    """
     try:
         url = "https://api.coingecko.com/api/v3/coins/markets"
         params = {
@@ -66,11 +69,18 @@ def get_top_cryptos(limit=10):
             "sparkline": False
         }
         response = requests.get(url, params=params)
-        response.raise_for_status()
+        response.raise_for_status()  # Esto lanzará un error si la petición falla
         data = response.json()
-        return [coin["id"] for coin in data]
+        
+        # ✅ CAMBIO: Devolvemos un diccionario con más datos, no solo el ID.
+        # Esto permite que el runner use el símbolo ('btc') y el nombre ('Bitcoin').
+        return [{'id': coin['id'], 'symbol': coin['symbol'], 'name': coin['name']} for coin in data]
+        
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error de red al obtener criptomonedas principales: {e}")
+        return []
     except Exception as e:
-        logger.error(f"Error al obtener criptomonedas principales: {e}")
+        logger.error(f"Error inesperado al obtener criptomonedas principales: {e}")
         return []
 
 def format_klines(klines):

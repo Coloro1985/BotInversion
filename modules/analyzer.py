@@ -1,146 +1,90 @@
 import pandas as pd
-import numpy as np
-from ta.momentum import RSIIndicator
-from ta.trend import MACD
-from datetime import datetime
-from modules.logger import configurar_logger
-logger = configurar_logger()
+import pandas_ta as ta
 
-
-def calculate_rsi(df):
-    df = df.copy()
-    if 'close' not in df.columns:
-        raise ValueError("El DataFrame debe contener la columna 'close'")
-    rsi_indicator = RSIIndicator(close=df['close'], window=14)
-    df['rsi'] = rsi_indicator.rsi()
+def _calculate_indicators(df):
+    """
+    Función privada para calcular y añadir los indicadores técnicos al DataFrame.
+    """
+    if df.empty:
+        return df
+    
+    # Calcular indicadores usando pandas_ta
+    df.ta.ema(length=50, append=True)
+    df.ta.ema(length=200, append=True)
+    df.ta.rsi(append=True)
+    df.ta.macd(append=True)
+    
+    # Renombrar columnas para consistencia y eliminar valores nulos
+    df.rename(columns={"EMA_50": "ema50", "EMA_200": "ema200", "RSI_14": "RSI", "MACD_12_26_9": "MACD", "MACDh_12_26_9": "macd_histogram", "MACDs_12_26_9": "macd_signal"}, inplace=True)
+    df.dropna(inplace=True)
+    
     return df
 
-def calculate_macd(df):
-    df = df.copy()
-    if 'close' not in df.columns:
-        raise ValueError("El DataFrame debe contener la columna 'close'")
-    macd_indicator = MACD(close=df['close'])
-    df['macd'] = macd_indicator.macd()
-    df['macd_signal'] = macd_indicator.macd_signal()
-    df['macd_diff'] = macd_indicator.macd_diff()
-    return df
+def _check_signals(df):
+    """
+    Función privada para revisar las señales de trading basadas en los indicadores.
+    Devuelve un string con la señal encontrada.
+    """
+    if df.empty:
+        return "Sin Datos"
 
-def calculate_ema(df, period):
-    df = df.copy()
-    if 'close' not in df.columns:
-        raise ValueError("El DataFrame debe contener la columna 'close'")
-    df[f'ema{period}'] = df['close'].ewm(span=period, adjust=False).mean()
-    return df
+    latest_row = df.iloc[-1]
+    previous_row = df.iloc[-2] if len(df) > 1 else latest_row
+    
+    signal = "Neutral"
 
-def detect_trend(df):
-    if 'macd' not in df.columns or 'macd_signal' not in df.columns:
-        raise ValueError("El DataFrame debe contener las columnas 'macd' y 'macd_signal'")
-    df['trend'] = np.where(df['macd'] > df['macd_signal'], 'bullish', 'bearish')
-    return df
+    # 1. Señal de Cruce de Medias Móviles (Golden Cross / Death Cross)
+    # Golden Cross: EMA50 cruza por ENCIMA de EMA200
+    if latest_row['ema50'] > latest_row['ema200'] and previous_row['ema50'] <= previous_row['ema200']:
+        signal = "🔼 Triángulo Dorado (Golden Cross)"
+    # Death Cross: EMA50 cruza por DEBAJO de EMA200
+    elif latest_row['ema50'] < latest_row['ema200'] and previous_row['ema50'] >= previous_row['ema200']:
+        signal = "🔽 Triángulo de Muerte (Death Cross)"
+        
+    # Aquí se podrían añadir más lógicas de señales en el futuro (ej. MACD, RSI)
+    
+    return signal
 
-def detect_golden_triangle(df):
-    required = ['rsi', 'macd', 'macd_signal', 'close', 'bollinger_upper']
-    if not all(col in df.columns for col in required):
-        raise ValueError(f"El DataFrame debe contener las columnas necesarias: {required}")
-    df['golden_triangle'] = np.where(
-        (df['rsi'] > 50) & 
-        (df['macd'] > df['macd_signal']) & 
-        (df['close'] > df['bollinger_upper']),
-        True, False)
-    return df
+def analyze_coin(symbol, name, df):
+    """
+    Analiza el DataFrame de una criptomoneda para generar una señal de trading.
+    
+    Args:
+        symbol (str): El símbolo de la moneda (ej. 'BTC').
+        name (str): El nombre de la moneda (ej. 'Bitcoin').
+        df (pd.DataFrame): DataFrame con los datos históricos (OHLCV).
 
-def calculate_bollinger_bands(df):
-    df = df.copy()
-    if 'close' not in df.columns:
-        raise ValueError("El DataFrame debe contener la columna 'close'")
-    window = 20
-    df['bollinger_mid'] = df['close'].rolling(window=window, min_periods=1).mean()
-    df['bollinger_std'] = df['close'].rolling(window=window, min_periods=1).std()
-    df['bollinger_upper'] = df['bollinger_mid'] + (df['bollinger_std'] * 2)
-    df['bollinger_lower'] = df['bollinger_mid'] - (df['bollinger_std'] * 2)
-    return df
+    Returns:
+        dict: Un diccionario con los resultados del análisis.
+    """
+    # Si no hay datos, devolver un diccionario vacío para evitar errores
+    if df.empty or len(df) < 2:
+        return {}
 
-def detect_signal(df):
-    if 'rsi' not in df.columns or 'macd' not in df.columns or 'macd_signal' not in df.columns:
-        raise ValueError("El DataFrame debe contener las columnas 'rsi', 'macd' y 'macd_signal'")
-    df['signal'] = np.select(
-        [
-            (df['rsi'] > 70) & (df['macd'] > df['macd_signal']),
-            (df['rsi'] < 30) & (df['macd'] < df['macd_signal'])
-        ],
-        [
-            "🔼 Señal de compra",
-            "🔽 Señal de venta"
-        ],
-        default="⏳ Sin señal clara"
-    )
-    return df
+    # 1. Calcular todos los indicadores necesarios
+    df_with_indicators = _calculate_indicators(df.copy())
+    
+    if df_with_indicators.empty:
+        return {}
+        
+    # 2. Obtener la última fila con datos y precios
+    latest_data = df_with_indicators.iloc[-1]
+    
+    # 3. Revisar si hay señales de compra/venta
+    trade_signal = _check_signals(df_with_indicators)
 
-def generate_signal_label(rsi, macd, macd_signal):
-    if rsi > 70 and macd > macd_signal:
-        return "🔼 Señal fuerte de compra"
-    elif 50 < rsi <= 70 and macd > macd_signal:
-        return "📈 Tendencia alcista"
-    elif rsi < 30 and macd < macd_signal:
-        return "🔽 Señal fuerte de venta"
-    elif 30 <= rsi < 50 and macd < macd_signal:
-        return "📉 Tendencia bajista"
-    else:
-        return "⏳ Sin señal clara"
-
-def analyze_coin(symbol, name, data):
-    if data.empty:
-        return {
-            'Coin': name,
-            'Symbol': symbol,
-            'Date': None,
-            'Price': None,
-            'RSI': None,
-            'MACD': None,
-            'Signal': None,
-            'Trend': None,
-            'Golden Triangle': None,
-            'ema50': None,
-            'ema200': None,
-        }
-    data = calculate_rsi(data)
-    logger.debug(f"{symbol} - Último RSI: {data['rsi'].iloc[-1]}")
-    data = calculate_macd(data)
-    logger.debug(f"{symbol} - Último MACD: {data['macd'].iloc[-1]}")
-    logger.debug(f"{symbol} - Último MACD Signal: {data['macd_signal'].iloc[-1]}")
-    data = calculate_ema(data, 50)
-    data = calculate_ema(data, 200)
-    data = detect_trend(data)
-    data = calculate_bollinger_bands(data)
-    data = detect_golden_triangle(data)
-    data = detect_signal(data)
-
-    signal = generate_signal_label(data['rsi'].iloc[-1], data['macd'].iloc[-1], data['macd_signal'].iloc[-1])
-    logger.debug(f"{symbol} - Señal generada: {signal}")
-
-    price = data['close'].iloc[-1] if not data.empty else 0.0
-    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-    return {
-        'Coin': name,
-        'Symbol': symbol,
-        'Date': now,
-        'Price': price,
-        'RSI': data['rsi'].iloc[-1] if 'rsi' in data else None,
-        'MACD': data['macd'].iloc[-1] if 'macd' in data else None,
-        'Signal': signal,
-        'Trend': data['trend'].iloc[-1] if 'trend' in data else None,
-        'Golden Triangle': data['golden_triangle'].iloc[-1] if 'golden_triangle' in data else None,
-        'ema50': data['ema50'].iloc[-1] if 'ema50' in data else None,
-        'ema200': data['ema200'].iloc[-1] if 'ema200' in data else None,
+    # 4. Construir el resultado final
+    result = {
+        "Symbol": symbol.upper(),
+        "Name": name,
+        "Price": latest_data.get('close', 0),
+        "RSI": latest_data.get('RSI', 0),
+        "MACD": latest_data.get('MACD', 0),
+        "macd_signal": latest_data.get('macd_signal', 0),
+        "ema50": latest_data.get('ema50', 0),
+        "ema200": latest_data.get('ema200', 0),
+        "volume": latest_data.get('volume', 0),
+        "Signal": trade_signal
     }
-
-def analyze_dataframe(df_dict):
-    results = []
-    for symbol, df in df_dict.items():
-        name = symbol  # Asumiendo que el nombre es igual al símbolo, puede cambiarse si se dispone de otro dato
-        result = analyze_coin(symbol, name, df)
-        results.append(result)
-    return results
-
-analyze = analyze_coin
+    
+    return result
