@@ -1,0 +1,31 @@
+# Archivo de configuración para definir las estrategias de trading a ejecutar.
+
+strategies:
+  # --- ESTRATEGIA DCA PARA COMPRAR BITCOIN ---
+  - name: "DCA_Bitcoin_Diario"
+    enabled: true # Activa o desactiva esta estrategia
+    type: "dca" # Tipo de estrategia (debe coincidir con STRATEGY_MAPPING)
+    symbol: "BTCUSDT"
+    parameters:
+      purchase_amount_usd: 75 # Comprar 75 USD de BTC
+      interval_hours: 24 # cada 24 horas
+
+  # --- ESTRATEGIA DE GRID PARA ETHEREUM ---
+  - name: "Grid_Ethereum_4k-5k"
+    enabled: true
+    type: "grid"
+    symbol: "ETHUSDT"
+    parameters:
+      lower_price: 4000 # Límite inferior de la parrilla
+      upper_price: 5000 # Límite superior de la parrilla
+      grid_levels: 15 # Número de líneas en la parrilla
+      investment_per_level_usd: 50 # Inversión por cada orden
+
+  # --- ESTRATEGIA DCA DESACTIVADA ---
+  - name: "DCA_Solana_Semanal"
+    enabled: false # Este bot no se ejecutará
+    type: "dca"
+    symbol: "SOLUSDT"
+    parameters:
+      purchase_amount_usd: 100
+      interval_hours: 168 # Semanal
