@@ -1193,3 +1193,157 @@
 📉 RSI: 53.10 | MACD: 396.5613
 🔔 ⏳ Sin señal clara
 
+2025-07-28 21:33:40,801 - INFO - 🚀 Iniciando Bot de Inversión...
+2025-07-28 21:33:40,801 - INFO - 
+🔄 Ejecutando análisis: 2025-07-28 21:33:40
+2025-07-28 21:33:41,177 - INFO - Obteniendo las 100 principales criptomonedas...
+2025-07-28 21:33:41,178 - INFO - Obteniendo las 100 criptomonedas principales desde CoinGecko...
+2025-07-28 21:33:42,747 - ERROR - ❌ Error procesando BTC: 'ema200'
+2025-07-28 21:33:43,943 - ERROR - ❌ Error procesando ETH: 'ema200'
+2025-07-28 21:33:45,172 - ERROR - ❌ Error procesando XRP: 'ema200'
+2025-07-28 21:33:46,006 - WARNING - No se obtuvieron klines para USDTUSDT. Saltando.
+2025-07-28 21:33:47,324 - ERROR - ❌ Error procesando BNB: 'ema200'
+2025-07-28 21:33:48,501 - ERROR - ❌ Error procesando SOL: 'ema200'
+2025-07-28 21:33:49,680 - ERROR - ❌ Error procesando USDC: 'ema200'
+2025-07-28 21:33:51,009 - ERROR - ❌ Error procesando DOGE: 'ema200'
+2025-07-28 21:33:51,845 - WARNING - No se obtuvieron klines para STETHUSDT. Saltando.
+2025-07-28 21:33:53,015 - ERROR - ❌ Error procesando TRX: 'ema200'
+2025-07-28 21:33:54,194 - ERROR - ❌ Error procesando ADA: 'ema200'
+2025-07-28 21:33:55,041 - WARNING - No se obtuvieron klines para WSTETHUSDT. Saltando.
+2025-07-28 21:33:56,223 - ERROR - ❌ Error procesando WBTC: 'ema200'
+2025-07-28 21:33:57,065 - WARNING - No se obtuvieron klines para HYPEUSDT. Saltando.
+2025-07-28 21:33:58,297 - ERROR - ❌ Error procesando SUI: 'ema200'
+2025-07-28 21:33:59,612 - ERROR - ❌ Error procesando XLM: 'ema200'
+2025-07-28 21:34:00,840 - ERROR - ❌ Error procesando LINK: 'ema200'
+2025-07-28 21:34:02,172 - ERROR - ❌ Error procesando WBETH: 'ema200'
+2025-07-28 21:34:03,504 - ERROR - ❌ Error procesando BCH: 'ema200'
+2025-07-28 21:34:04,832 - ERROR - ❌ Error procesando HBAR: 'ema200'
+2025-07-28 21:34:05,679 - WARNING - No se obtuvieron klines para WEETHUSDT. Saltando.
+2025-07-28 21:34:06,887 - ERROR - ❌ Error procesando AVAX: 'ema200'
+2025-07-28 21:34:07,728 - WARNING - No se obtuvieron klines para WETHUSDT. Saltando.
+2025-07-28 21:34:08,903 - ERROR - ❌ Error procesando LTC: 'ema200'
+2025-07-28 21:34:09,811 - WARNING - No se obtuvieron klines para LEOUSDT. Saltando.
+2025-07-28 21:34:10,988 - ERROR - ❌ Error procesando TON: 'ema200'
+2025-07-28 21:34:12,281 - ERROR - ❌ Error procesando SHIB: 'ema200'
+2025-07-28 21:34:13,216 - WARNING - No se obtuvieron klines para USDEUSDT. Saltando.
+2025-07-28 21:34:14,389 - WARNING - No se obtuvieron klines para USDSUSDT. Saltando.
+2025-07-28 21:34:15,237 - WARNING - No se obtuvieron klines para BSC-USDUSDT. Saltando.
+2025-07-28 21:34:16,080 - WARNING - No se obtuvieron klines para WBTUSDT. Saltando.
+2025-07-28 21:34:17,004 - WARNING - No se obtuvieron klines para CBBTCUSDT. Saltando.
+2025-07-28 21:34:18,245 - ERROR - ❌ Error procesando UNI: 'ema200'
+2025-07-28 21:34:19,495 - ERROR - ❌ Error procesando DOT: 'ema200'
+2025-07-28 21:34:20,731 - WARNING - No se obtuvieron klines para XMRUSDT. Saltando.
+2025-07-28 21:34:21,579 - WARNING - No se obtuvieron klines para BGBUSDT. Saltando.
+2025-07-28 21:34:22,867 - ERROR - ❌ Error procesando PEPE: 'ema200'
+2025-07-28 21:34:23,764 - WARNING - No se obtuvieron klines para CROUSDT. Saltando.
+2025-07-28 21:34:25,030 - ERROR - ❌ Error procesando AAVE: 'ema200'
+2025-07-28 21:34:25,862 - WARNING - No se obtuvieron klines para SUSDEUSDT. Saltando.
+2025-07-28 21:34:27,070 - ERROR - ❌ Error procesando ENA: 'ema200'
+2025-07-28 21:34:28,249 - ERROR - ❌ Error procesando TAO: 'ema200'
+2025-07-28 21:34:29,399 - WARNING - No se obtuvieron klines para DAIUSDT. Saltando.
+2025-07-28 21:34:30,230 - WARNING - No se obtuvieron klines para PIUSDT. Saltando.
+2025-07-28 21:34:31,398 - ERROR - ❌ Error procesando NEAR: 'ema200'
+2025-07-28 21:34:32,581 - ERROR - ❌ Error procesando ETC: 'ema200'
+2025-07-28 21:34:33,912 - ERROR - ❌ Error procesando ONDO: 'ema200'
+2025-07-28 21:34:35,139 - ERROR - ❌ Error procesando ICP: 'ema200'
+2025-07-28 21:34:36,051 - WARNING - No se obtuvieron klines para JITOSOLUSDT. Saltando.
+2025-07-28 21:34:36,893 - WARNING - No se obtuvieron klines para OKBUSDT. Saltando.
+2025-07-28 21:34:38,116 - ERROR - ❌ Error procesando APT: 'ema200'
+2025-07-28 21:34:38,961 - WARNING - No se obtuvieron klines para MNTUSDT. Saltando.
+2025-07-28 21:34:39,812 - WARNING - No se obtuvieron klines para KASUSDT. Saltando.
+2025-07-28 21:34:41,189 - ERROR - ❌ Error procesando PENGU: 'ema200'
+2025-07-28 21:34:42,521 - ERROR - ❌ Error procesando BONK: 'ema200'
+2025-07-28 21:34:43,426 - WARNING - No se obtuvieron klines para BUIDLUSDT. Saltando.
+2025-07-28 21:34:44,772 - ERROR - ❌ Error procesando ALGO: 'ema200'
+2025-07-28 21:34:45,610 - WARNING - No se obtuvieron klines para WETHUSDT. Saltando.
+2025-07-28 21:34:46,819 - ERROR - ❌ Error procesando ARB: 'ema200'
+2025-07-28 21:34:48,151 - ERROR - ❌ Error procesando USD1: 'ema200'
+2025-07-28 21:34:49,058 - WARNING - No se obtuvieron klines para GTUSDT. Saltando.
+2025-07-28 21:34:50,403 - ERROR - ❌ Error procesando ATOM: 'ema200'
+2025-07-28 21:34:51,735 - ERROR - ❌ Error procesando VET: 'ema200'
+2025-07-28 21:34:52,986 - ERROR - ❌ Error procesando RENDER: 'ema200'
+2025-07-28 21:34:54,289 - ERROR - ❌ Error procesando POL: 'ema200'
+2025-07-28 21:34:55,474 - ERROR - ❌ Error procesando WLD: 'ema200'
+2025-07-28 21:34:56,429 - WARNING - No se obtuvieron klines para FTNUSDT. Saltando.
+2025-07-28 21:34:57,268 - WARNING - No se obtuvieron klines para SPXUSDT. Saltando.
+2025-07-28 21:34:58,598 - ERROR - ❌ Error procesando TRUMP: 'ema200'
+2025-07-28 21:34:59,504 - WARNING - No se obtuvieron klines para SKYUSDT. Saltando.
+2025-07-28 21:35:00,848 - ERROR - ❌ Error procesando FET: 'ema200'
+2025-07-28 21:35:02,079 - ERROR - ❌ Error procesando SEI: 'ema200'
+2025-07-28 21:35:03,405 - ERROR - ❌ Error procesando BNSOL: 'ema200'
+2025-07-28 21:35:04,315 - WARNING - No se obtuvieron klines para RETHUSDT. Saltando.
+2025-07-28 21:35:05,567 - ERROR - ❌ Error procesando FIL: 'ema200'
+2025-07-28 21:35:05,581 - WARNING - 🛑 Ejecución del bot interrumpida por el usuario.
+2025-07-28 21:37:09,728 - INFO - 🚀 Iniciando Bot de Inversión...
+2025-07-28 21:37:09,729 - INFO - 
+🔄 Ejecutando análisis: 2025-07-28 21:37:09
+2025-07-28 21:37:10,098 - INFO - Obteniendo las 100 principales criptomonedas...
+2025-07-28 21:37:10,098 - INFO - Obteniendo las 100 criptomonedas principales desde CoinGecko...
+2025-07-28 21:37:14,877 - WARNING - No se obtuvieron klines para USDTUSDT. Saltando.
+2025-07-28 21:37:20,443 - WARNING - No se obtuvieron klines para STETHUSDT. Saltando.
+2025-07-28 21:37:23,645 - WARNING - No se obtuvieron klines para WSTETHUSDT. Saltando.
+2025-07-28 21:37:25,639 - WARNING - No se obtuvieron klines para HYPEUSDT. Saltando.
+2025-07-28 21:37:33,543 - WARNING - No se obtuvieron klines para WEETHUSDT. Saltando.
+2025-07-28 21:37:35,550 - WARNING - No se obtuvieron klines para WETHUSDT. Saltando.
+2025-07-28 21:37:37,554 - WARNING - No se obtuvieron klines para LEOUSDT. Saltando.
+2025-07-28 21:37:40,767 - WARNING - No se obtuvieron klines para USDEUSDT. Saltando.
+2025-07-28 21:37:41,927 - WARNING - No se obtuvieron klines para USDSUSDT. Saltando.
+2025-07-28 21:37:42,765 - WARNING - No se obtuvieron klines para BSC-USDUSDT. Saltando.
+2025-07-28 21:37:43,597 - WARNING - No se obtuvieron klines para WBTUSDT. Saltando.
+2025-07-28 21:37:44,441 - WARNING - No se obtuvieron klines para CBBTCUSDT. Saltando.
+2025-07-28 21:37:48,005 - WARNING - No se obtuvieron klines para XMRUSDT. Saltando.
+2025-07-28 21:37:48,844 - WARNING - No se obtuvieron klines para BGBUSDT. Saltando.
+2025-07-28 21:37:50,900 - WARNING - No se obtuvieron klines para CROUSDT. Saltando.
+2025-07-28 21:37:52,917 - WARNING - No se obtuvieron klines para SUSDEUSDT. Saltando.
+2025-07-28 21:37:56,501 - WARNING - No se obtuvieron klines para DAIUSDT. Saltando.
+2025-07-28 21:37:57,340 - WARNING - No se obtuvieron klines para PIUSDT. Saltando.
+2025-07-28 21:38:03,004 - WARNING - No se obtuvieron klines para JITOSOLUSDT. Saltando.
+2025-07-28 21:38:03,833 - WARNING - No se obtuvieron klines para OKBUSDT. Saltando.
+2025-07-28 21:38:05,841 - WARNING - No se obtuvieron klines para MNTUSDT. Saltando.
+2025-07-28 21:38:06,687 - WARNING - No se obtuvieron klines para KASUSDT. Saltando.
+2025-07-28 21:38:09,965 - WARNING - No se obtuvieron klines para BUIDLUSDT. Saltando.
+2025-07-28 21:38:11,985 - WARNING - No se obtuvieron klines para WETHUSDT. Saltando.
+2025-07-28 21:38:15,159 - WARNING - No se obtuvieron klines para GTUSDT. Saltando.
+2025-07-28 21:38:22,001 - WARNING - No se obtuvieron klines para FTNUSDT. Saltando.
+2025-07-28 21:38:22,847 - WARNING - No se obtuvieron klines para SPXUSDT. Saltando.
+2025-07-28 21:38:24,882 - WARNING - No se obtuvieron klines para SKYUSDT. Saltando.
+2025-07-28 21:38:29,225 - WARNING - No se obtuvieron klines para RETHUSDT. Saltando.
+2025-07-28 21:38:32,401 - WARNING - No se obtuvieron klines para FLRUSDT. Saltando.
+2025-07-28 21:38:33,232 - WARNING - No se obtuvieron klines para RSETHUSDT. Saltando.
+2025-07-28 21:38:34,075 - WARNING - No se obtuvieron klines para LBTCUSDT. Saltando.
+2025-07-28 21:38:34,979 - WARNING - No se obtuvieron klines para SUSDSUSDT. Saltando.
+2025-07-28 21:38:37,025 - WARNING - No se obtuvieron klines para IPUSDT. Saltando.
+2025-07-28 21:38:37,865 - WARNING - No se obtuvieron klines para JLPUSDT. Saltando.
+2025-07-28 21:38:38,692 - WARNING - No se obtuvieron klines para KCSUSDT. Saltando.
+2025-07-28 21:38:39,520 - WARNING - No se obtuvieron klines para XDCUSDT. Saltando.
+2025-07-28 21:38:40,354 - WARNING - No se obtuvieron klines para USDTBUSDT. Saltando.
+2025-07-28 21:38:41,197 - WARNING - No se obtuvieron klines para OSETHUSDT. Saltando.
+2025-07-28 21:38:43,302 - WARNING - No se obtuvieron klines para METHUSDT. Saltando.
+2025-07-28 21:38:46,543 - WARNING - No se obtuvieron klines para LSETHUSDT. Saltando.
+2025-07-28 21:38:48,569 - WARNING - No se obtuvieron klines para USDT0USDT. Saltando.
+2025-07-28 21:38:51,754 - WARNING - No se obtuvieron klines para EZETHUSDT. Saltando.
+2025-07-28 21:38:53,826 - WARNING - No se obtuvieron klines para USDTUSDT. Saltando.
+2025-07-28 21:38:54,662 - WARNING - No se obtuvieron klines para USDFUSDT. Saltando.
+2025-07-28 21:38:54,663 - INFO - --- Top 20 Señales Encontradas ---
+2025-07-28 21:38:54,664 - INFO - 📊 APT: Precio=$4.66, RSI=43.30, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,664 - INFO - 📊 TRUMP: Precio=$9.68, RSI=46.54, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,664 - INFO - 📊 AAVE: Precio=$290.08, RSI=46.68, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,664 - INFO - 📊 FDUSD: Precio=$1.00, RSI=47.19, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,664 - INFO - 📊 PEPE: Precio=$0.00, RSI=47.44, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,664 - INFO - 📊 FET: Precio=$0.73, RSI=48.16, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,664 - INFO - 📊 SHIB: Precio=$0.00, RSI=48.31, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,665 - INFO - 📊 DOT: Precio=$3.98, RSI=48.82, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,665 - INFO - 📊 VET: Precio=$0.02, RSI=48.88, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,665 - INFO - 📊 ATOM: Precio=$4.63, RSI=49.70, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,665 - INFO - 📊 FIL: Precio=$2.61, RSI=49.74, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,665 - INFO - 📊 TIA: Precio=$1.90, RSI=49.91, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,665 - INFO - 📊 TAO: Precio=$403.40, RSI=50.80, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,665 - INFO - 📊 STX: Precio=$0.79, RSI=51.05, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,665 - INFO - 📊 ICP: Precio=$5.56, RSI=51.33, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,666 - INFO - 📊 POL: Precio=$0.23, RSI=51.34, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,666 - INFO - 📊 WLD: Precio=$1.12, RSI=51.47, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,666 - INFO - 📊 SEI: Precio=$0.32, RSI=51.53, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,666 - INFO - 📊 NEAR: Precio=$2.74, RSI=53.22, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,666 - INFO - 📊 RENDER: Precio=$4.07, RSI=53.53, Señal='Datos Insuficientes'
+2025-07-28 21:38:54,700 - INFO - Resultados exportados exitosamente a: reports/top_signals_2025-07-28_21-38-54.csv
+2025-07-28 21:38:54,709 - INFO - ✅ Ciclo del bot completado exitosamente.

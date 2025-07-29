@@ -10,7 +10,8 @@ from binance.client import Client
 import config
 from src.bot.logger import configurar_logger
 from src.bot.analyzer import analyze_coin
-from src.bot.data_fetcher import format_klines, get_historical_klines, get_top_cryptos
+from src.bot.data_fetcher import format_klines, get_top_cryptos
+from src.bot.adapters.binance_adapter import get_historical_klines
 from src.bot.telegram_utils import send_telegram_message
 from src.bot.utils import guardar_historial, limpiar_archivos_csv, exportar_resultados_csv
 # from src.strategies.momentum import check_price_alerts # Lo dejamos comentado por ahora

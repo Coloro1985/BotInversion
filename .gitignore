@@ -3,7 +3,12 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.env
+.env
+
+# Entorno Virtual
+.venv/
+venv/
+*.venv
 
 # Archivos de Sistema Operativo
 .DS_Store
@@ -13,6 +18,10 @@ Thumbs.db
 /logs/
 /reports/
 /data/
+
+# Archivos de configuración del Dashboard
+config_filtros.json
+favoritas.json
 
 # Archivos de IDEs
 .idea/

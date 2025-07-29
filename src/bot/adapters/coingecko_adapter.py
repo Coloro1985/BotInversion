@@ -1,25 +1,34 @@
-import requests
-import pandas as pd
-from modules.logger import configurar_logger
+import os
+from binance.client import Client
+from dotenv import load_dotenv
 
+# ✅ Se corrige la ruta del logger para que sea relativa
+from ..logger import configurar_logger
+
+# Cargar variables de entorno y configurar logger
+load_dotenv()
 logger = configurar_logger()
 
-def get_price_data(symbol, vs_currency="usd", days=30):
-    """Devuelve histórico de precios de CoinGecko como DataFrame."""
-    url = f"https://api.coingecko.com/api/v3/coins/{symbol}/market_chart"
-    params = {"vs_currency": vs_currency, "days": days}
+# Inicializar cliente de Binance
+binance_client = Client(
+    api_key=os.getenv("BINANCE_API_KEY"),
+    api_secret=os.getenv("BINANCE_SECRET_KEY")
+)
 
+def get_symbol_price(symbol):
+    """Obtiene el precio actual de un símbolo desde Binance."""
     try:
-        response = requests.get(url, params=params, timeout=10)
-        response.raise_for_status()
-        prices = response.json().get("prices", [])
-        if not prices:
-            return pd.DataFrame()
-        
-        df = pd.DataFrame(prices, columns=["timestamp", "price"])
-        df["timestamp"] = pd.to_datetime(df["timestamp"], unit="ms")
-        df.set_index("timestamp", inplace=True)
-        return df
+        ticker = binance_client.get_symbol_ticker(symbol=symbol)
+        return float(ticker['price'])
     except Exception as e:
-        logger.error(f"Error al obtener datos de CoinGecko para {symbol}: {e}")
-        return pd.DataFrame()
+        logger.error(f"Error al obtener precio para {symbol} desde Binance: {e}")
+        return None
+
+def get_historical_klines(symbol, interval, start_str):
+    """Obtiene datos históricos (klines/velas) para un símbolo."""
+    try:
+        klines = binance_client.get_historical_klines(symbol, interval, start_str)
+        return klines
+    except Exception as e:
+        logger.error(f"Error al obtener klines históricos para {symbol}: {e}")
+        return []

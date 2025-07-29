@@ -73,4 +73,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Corrección de Imports**: Se actualizaron todas las rutas de importación para funcionar con la nueva estructura de directorios.
 - **Estabilidad de Conexión**: Se optimizó la frecuencia de las llamadas a las APIs para minimizar errores de `"Too Many Requests"`.
 
----
+- **Se modifico y limpio la estructura**: Se ajusto la estructura del proyecto, eliminando carpetas y archivos que no se utilizaron.

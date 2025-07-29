@@ -2,22 +2,31 @@ import streamlit as st
 import os
 import pandas as pd
 
-def render_reporting_tools(df, selected_file):
+def render_reporting_tools(df_filtered, selected_file_name):
+    """
+    Renderiza las herramientas para guardar un reporte filtrado.
+
+    Args:
+        df_filtered (pd.DataFrame): El DataFrame con los datos ya filtrados.
+        selected_file_name (str): El nombre del archivo original para usarlo en el nuevo nombre.
+    """
     st.markdown("### 💾 Exportar Reporte Filtrado")
     st.markdown("Puedes guardar esta vista como un archivo CSV para su posterior análisis o consulta.")
 
-    if df.empty:
-        st.warning("⚠️ No hay datos para guardar.")
+    # ✅ Guarda de seguridad: nos aseguramos de que df_filtered sea un DataFrame
+    if not isinstance(df_filtered, pd.DataFrame) or df_filtered.empty:
+        st.warning("⚠️ No hay datos filtrados para guardar.")
         return
 
-    default_name = f"reporte_{selected_file.replace('.csv','')}"
-    directorio_reportes = os.path.join(os.getcwd(), "reports")
+    # Limpiamos el nombre del archivo base
+    base_name = os.path.basename(selected_file_name).replace('.csv', '')
+    default_name = f"reporte_filtrado_{base_name}"
+    
+    directorio_reportes = "reports" # Guardamos en la carpeta raíz de reportes
     os.makedirs(directorio_reportes, exist_ok=True)
 
-    st.markdown("---")
     with st.form("guardar_reporte_form"):
         nombre_archivo = st.text_input("Nombre del archivo:", value=default_name).strip()
-        st.markdown("&nbsp;")
         submit_guardar = st.form_submit_button("💾 Guardar como CSV")
 
         if submit_guardar:
@@ -25,15 +34,12 @@ def render_reporting_tools(df, selected_file):
                 st.warning("⚠️ El nombre del archivo no puede estar vacío.")
                 return
 
-            nombre_archivo = "".join(c for c in nombre_archivo if c.isalnum() or c in ('_', '-')).rstrip()
-            nombre_base = os.path.join(directorio_reportes, f"{nombre_archivo}.csv")
-            contador = 1
-            nombre_final = nombre_base
-            while os.path.exists(nombre_final):
-                nombre_final = os.path.join(directorio_reportes, f"{nombre_archivo}_v{contador}.csv")
-                contador += 1
+            # Limpiar el nombre para que sea seguro
+            safe_filename = "".join(c for c in nombre_archivo if c.isalnum() or c in ('_', '-')).rstrip()
+            final_path = os.path.join(directorio_reportes, f"{safe_filename}.csv")
 
-            df.to_csv(nombre_final, index=False)
-            st.markdown("El archivo se almacenará en la carpeta `/reports` del proyecto.")
-            st.success(f"✅ Reporte guardado como {os.path.basename(nombre_final)}")
-            st.code(nombre_final, language="bash")
+            try:
+                df_filtered.to_csv(final_path, index=False)
+                st.success(f"✅ Reporte guardado como `{safe_filename}.csv` en la carpeta `reports/`.")
+            except Exception as e:
+                st.error(f"❌ No se pudo guardar el archivo: {e}")

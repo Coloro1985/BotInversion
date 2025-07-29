@@ -1,7 +1,7 @@
 import os
 import telegram
 from dotenv import load_dotenv
-from modules.logger import configurar_logger
+from .logger import configurar_logger
 
 load_dotenv()
 

@@ -1,5 +1,6 @@
-import os
 import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 import glob
 import json
 from datetime import datetime
@@ -8,9 +9,7 @@ import pandas as pd
 import streamlit as st
 import streamlit_autorefresh
 
-# Esta línea es CRUCIAL. Se asegura de que Streamlit encuentre tus módulos en 'src'.
-# Debe estar al principio de los imports de tu aplicación.
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
 
 # =================== BLOQUE DE IMPORTS CORREGIDO ===================
 # --- Imports de tu aplicación ---
@@ -95,14 +94,18 @@ def main_dashboard():
     ]
     seccion_seleccionada = st.sidebar.radio("Selecciona una sección:", secciones)
 
-    # --- Renderizado de Secciones ---
+    # --- Renderizado de Secciones (CORREGIDO) ---
     if seccion_seleccionada == "Resumen de Señales":
         render_signal_summary_section(df_full)
+
     elif seccion_seleccionada == "Filtros y Reportes":
-        # Asegúrate de que render_filters_section devuelva solo lo que necesitas
-        filtered_df, _, _, _, _, _, _, _, _ = render_filters_section(df_full)
+        # ✅ CORRECCIÓN: La función solo devuelve una variable, el DataFrame filtrado.
+        filtered_df = render_filters_section(df_full)
+    
+        # Ahora que 'filtered_df' es un DataFrame, las siguientes líneas funcionarán.
         render_reporting_tools(filtered_df, selected_report_file)
         st.dataframe(filtered_df)
+
     elif seccion_seleccionada == "Análisis Técnico Individual":
         # Pasamos el dataframe completo para que el componente elija la moneda
         render_technical_analysis_section(df_full)
