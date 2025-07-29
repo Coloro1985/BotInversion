@@ -1,42 +1,32 @@
+# main.py
+
+import sys
 import os
-import time
-import schedule
-from dotenv import load_dotenv
-from config import VS_CURRENCY
-from binance.client import Client
-from modules.utils import load_symbol_map
-from modules.logger import configurar_logger
-from modules.data_fetcher import get_top_cryptos
-from modules.runner import run_bot
-from modules.telegram_utils import iniciar_telegram_bot
 
+# Esta línea es lo PRIMERO que debe ejecutarse.
+# Añade la carpeta raíz del proyecto al 'path' de Python para que pueda encontrar 'src'.
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-# Cargar variables de entorno y mapa de símbolos
-load_dotenv()
-logger = configurar_logger()
-logger.info("Bot iniciado.")
-SYMBOL_MAP = load_symbol_map() # Usa "data/symbol_map.csv" como fuente
+# Ahora, importamos solo lo que main.py necesita para arrancar.
+from src.bot.runner import run_bot
+from src.bot.logger import configurar_logger
 
-# Inicializar cliente Binance
-binance_client = Client(
-    api_key=os.getenv("BINANCE_API_KEY"),
-    api_secret=os.getenv("BINANCE_SECRET_KEY")
-)
-
-# Definir las monedas objetivo
-COINS = get_top_cryptos()
-
-def main():
-    iniciar_telegram_bot()
-
-    if os.getenv("RUN_ONCE") == "1":
-        run_bot()
-    else:
-        logger.info("🤖 Bot de trading iniciado. Presiona Ctrl+C para detener.")
-        run_bot()
-        while True:
-            schedule.run_pending()
-            time.sleep(1)
-
+# El bloque __name__ == "__main__" es el único punto de entrada de la aplicación.
 if __name__ == "__main__":
-    main()
+    
+    # 1. Configurar el logger al inicio de todo.
+    logger = configurar_logger()
+    
+    try:
+        # 2. Iniciar la ejecución del bot.
+        logger.info("🚀 Iniciando Bot de Inversión...")
+        run_bot()
+        logger.info("✅ Ciclo del bot completado exitosamente.")
+
+    except KeyboardInterrupt:
+        # Esto permite detener el bot de forma segura con Ctrl+C
+        logger.warning("🛑 Ejecución del bot interrumpida por el usuario.")
+        
+    except Exception as e:
+        # Atrapa cualquier otro error inesperado que pueda ocurrir.
+        logger.critical(f"💥 Error fatal en la ejecución principal: {e}", exc_info=True)

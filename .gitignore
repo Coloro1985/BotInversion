@@ -1,9 +1,19 @@
-# Ignorar archivo de variables de entorno
-.env
-
-# Ignorar entorno virtual
-.venv/
-
-# Ignorar archivos temporales de Python
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.env
+
+# Archivos de Sistema Operativo
+.DS_Store
+Thumbs.db
+
+# Carpetas de archivos generados
+/logs/
+/reports/
+/data/
+
+# Archivos de IDEs
+.idea/
+.vscode/

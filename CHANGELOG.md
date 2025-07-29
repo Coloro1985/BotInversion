@@ -48,20 +48,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Eliminación del archivo duplicado `bot.py` y carpeta `historicos/`.
 
+# 📦 Changelog
+
 ## [1.2.0] - 2025-07-28
 
-### Added
+### 🆕 Added
 
-- **Configuración Centralizada:** Se ha creado un archivo `config.py` que permite modificar fácilmente los parámetros clave del bot (límite de criptomonedas, intervalos, etc.) sin alterar el código fuente.
-- **Análisis Dinámico de Criptomonedas:** El bot ahora obtiene automáticamente las criptomonedas más relevantes por capitalización de mercado desde la API, en lugar de depender de una lista estática.
+- **Configuración Centralizada**: Se creó un archivo `config.py` para gestionar fácilmente los parámetros del bot (límite de criptomonedas, intervalos, etc.) sin modificar el código fuente.
+- **Análisis Dinámico de Criptomonedas**: El bot ahora obtiene las criptomonedas más relevantes por capitalización de mercado directamente desde la API, eliminando la dependencia de un archivo `symbol_map.csv` estático.
 
-### Changed
+---
 
-- **Refactorización del Módulo de Análisis:** El archivo `analyzer.py` fue reestructurado por completo, dividiendo la lógica en funciones más pequeñas y mantenibles para una mayor claridad y escalabilidad.
-- **Mejora en la Detección de Señales:** La lógica para identificar el "Cruce Dorado" y "Cruce de la Muerte" ahora es más precisa, detectando el momento exacto del cruce de las medias móviles.
+### 🔁 Changed
 
-### Fixed
+- **Reestructuración del Proyecto**: Se reorganizó todo el código fuente en un directorio `src/`, separando la lógica del bot (`src/bot`), el dashboard (`src/dashboard`) y las estrategias (`src/strategies`) para una mayor claridad y escalabilidad.
+- **Refactorización del Código**: Se refactorizaron módulos clave como `runner.py`, `analyzer.py` y `data_fetcher.py` para mejorar la legibilidad, mantenibilidad y separar responsabilidades.
+- **Mejora en la Detección de Señales**: La lógica para identificar el _"Cruce Dorado"_ y _"Cruce de la Muerte"_ ahora es más precisa, detectando el cruce exacto de las medias móviles.
 
-- **Estabilidad del Bot:** Se corrigieron errores críticos (`KeyError`) que causaban la detención del bot si los datos de una moneda llegaban incompletos. El bot ahora continúa su ejecución de forma robusta.
-- **Exportación de Reportes:** Se solucionó un error que impedía la correcta exportación de los resultados a archivos CSV.
-- **Conexión con APIs:** Se optimizó la frecuencia de las llamadas a las APIs para minimizar errores de "Too Many Requests" y mejorar la fiabilidad.
+---
+
+### 🐛 Fixed
+
+- **Robustez y Manejo de Errores**: Se corrigieron errores críticos (`KeyError`, `TypeError`) que detenían la ejecución del bot. El sistema ahora es más resiliente a datos incompletos de la API.
+- **Corrección de Imports**: Se actualizaron todas las rutas de importación para funcionar con la nueva estructura de directorios.
+- **Estabilidad de Conexión**: Se optimizó la frecuencia de las llamadas a las APIs para minimizar errores de `"Too Many Requests"`.
+
+---

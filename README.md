@@ -1,139 +1,168 @@
-# 🤖 Bot de Inversión en Criptomonedas
+# 🤖 Bot de Inversión en Criptomonedas v1.2.0
+
+Este proyecto es un bot de inversión automatizado que utiliza análisis técnico para detectar señales de trading en el mercado de criptomonedas. Incluye un dashboard interactivo desarrollado con Streamlit para visualizar y analizar los datos.
 
 ## 📚 Tabla de Contenidos
 
 - [Estructura del Proyecto](#-estructura-del-proyecto)
-- [Cómo iniciar el bot](#-cómo-iniciar-el-bot)
-- [Cómo iniciar el dashboard](#-cómo-iniciar-el-dashboard)
-- [Funcionalidades](#-funcionalidades)
-- [Requisitos](#-requisitos)
-- [Notas adicionales](#-notas-adicionales)
 - [Instalación](#-instalación)
+- [Configuración](#-configuración)
+- [Cómo Iniciar](#-cómo-iniciar)
+- [Funcionalidades](#-funcionalidades)
 - [Versión](#-versión)
 - [Licencia](#-licencia)
 - [Autor](#-autor)
 
-Este proyecto es un bot de inversión automatizado que utiliza análisis técnico para detectar señales de compra y venta en el mercado de criptomonedas. También incluye un dashboard interactivo desarrollado con Streamlit para visualizar datos y señales.
+## 📂 Estructura del Proyecto
 
-## 📂 Estructura del proyecto
+El proyecto sigue una estructura limpia y escalable, separando el código fuente de los archivos generados.
 
-```
 BotInversion/
-├── main.py               # Punto de entrada principal del bot
-├── dashboard.py          # Dashboard web con Streamlit
-├── modules/              # Lógica modular del bot
-│   ├── adapters/         # Adaptadores para APIs externas (Binance, CoinGecko, Telegram, etc.)
-│   ├── strategies/       # Estrategias de trading y señales
-│   ├── utils/            # Utilidades y funciones auxiliares
-│   ├── styles/           # Archivos de estilos y configuración visual
-│   └── ...               # Otros módulos específicos
-├── data/                 # Archivos CSV generados automáticamente y symbol_map.csv
-├── logs/                 # Registros avanzados del sistema y errores
-├── requirements.txt      # Dependencias del entorno virtual
-└── README.md             # Este archivo
-```
+├── src/ # Directorio principal del código fuente
+│ ├── bot/ # Lógica principal del bot de análisis
+│ ├── dashboard/ # Código de la aplicación web con Streamlit
+│ └── strategies/ # Estrategias de trading
+├── config.py # Archivo central de configuración
+├── main.py # Punto de entrada para ejecutar el bot
+├── requirements.txt # Dependencias del proyecto
+├── logs/ # Archivos de log generados por el bot
+├── reports/ # Reportes CSV con las señales generadas
+└── README.md # Este archivo
 
 ## 🧪 Instalación
 
-1. Clona el repositorio:
+1.  Clona el repositorio:
+    ```bash
+    git clone [https://github.com/Coloro1985/BotInversion.git](https://github.com/Coloro1985/BotInversion.git)
+    cd BotInversion
+    ```
+2.  Crea y activa un entorno virtual:
+    ```bash
+    python -m venv .venv
+    source .venv/bin/activate  # En Mac/Linux
+    # .venv\Scripts\activate   # En Windows
+    ```
+3.  Instala las dependencias:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-   ```bash
-   git clone https://github.com/Coloro1985/BotInversion.git
-   cd BotInversion
+## ⚙️ Configuración
 
-   # Crear y activar entorno virtual
-   python -m venv .venv
-   source .venv/bin/activate  # En Mac/Linux
-   # .venv\Scripts\activate   # En Windows
+1.  Crea un archivo `.env` en la raíz del proyecto.
+2.  Añade tus claves de API de Binance en el archivo `.env`:
+    ```env
+    BINANCE_API_KEY="TU_API_KEY"
+    BINANCE_SECRET_KEY="TU_SECRET_KEY"
+    ```
+3.  Ajusta los parámetros del bot (como el número de monedas a analizar o el intervalo de tiempo) directamente en el archivo `config.py`.
 
-   # Instalar dependencias
-   pip install -r requirements.txt
-   ```
+## 🚀 Cómo Iniciar
 
-2. Configura el archivo `.env` con tus claves y ajustes necesarios.
+### Iniciar el Bot de Análisis
 
-## 🚀 Cómo iniciar el bot
+Asegúrate de tener el entorno virtual activado. Para ejecutar el bot y generar los reportes CSV:
 
-Primero, asegúrate de activar el entorno virtual:
+````bash
+python main.py
 
-```bash
-source .venv/bin/activate  # MacOS/Linux
-# .venv\Scripts\activate   # Windows
-```
+¡Entendido! Aquí tienes ambos textos formateados en Markdown para que los puedas copiar y pegar directamente en tus archivos.
 
-Luego, puedes ejecutar el bot con:
+Para tu archivo README.md
+Markdown
 
+# 🤖 Bot de Inversión en Criptomonedas v1.2.0
+
+Este proyecto es un bot de inversión automatizado que utiliza análisis técnico para detectar señales de trading en el mercado de criptomonedas. Incluye un dashboard interactivo desarrollado con Streamlit para visualizar y analizar los datos.
+
+## 📚 Tabla de Contenidos
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Instalación](#-instalación)
+- [Configuración](#-configuración)
+- [Cómo Iniciar](#-cómo-iniciar)
+- [Funcionalidades](#-funcionalidades)
+- [Versión](#-versión)
+- [Licencia](#-licencia)
+- [Autor](#-autor)
+
+## 📂 Estructura del Proyecto
+El proyecto sigue una estructura limpia y escalable, separando el código fuente de los archivos generados.
+
+BotInversion/
+├── src/                      # Directorio principal del código fuente
+│   ├── bot/                  # Lógica principal del bot de análisis
+│   ├── dashboard/            # Código de la aplicación web con Streamlit
+│   └── strategies/           # Estrategias de trading
+├── config.py                 # Archivo central de configuración
+├── main.py                   # Punto de entrada para ejecutar el bot
+├── requirements.txt          # Dependencias del proyecto
+├── logs/                     # Archivos de log generados por el bot
+├── reports/                  # Reportes CSV con las señales generadas
+└── README.md                 # Este archivo
+
+
+## 🧪 Instalación
+1.  Clona el repositorio:
+    ```bash
+    git clone [https://github.com/Coloro1985/BotInversion.git](https://github.com/Coloro1985/BotInversion.git)
+    cd BotInversion
+    ```
+2.  Crea y activa un entorno virtual:
+    ```bash
+    python -m venv .venv
+    source .venv/bin/activate  # En Mac/Linux
+    # .venv\Scripts\activate   # En Windows
+    ```
+3.  Instala las dependencias:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## ⚙️ Configuración
+1.  Crea un archivo `.env` en la raíz del proyecto.
+2.  Añade tus claves de API de Binance en el archivo `.env`:
+    ```env
+    BINANCE_API_KEY="TU_API_KEY"
+    BINANCE_SECRET_KEY="TU_SECRET_KEY"
+    ```
+3.  Ajusta los parámetros del bot (como el número de monedas a analizar o el intervalo de tiempo) directamente en el archivo `config.py`.
+
+## 🚀 Cómo Iniciar
+
+### Iniciar el Bot de Análisis
+Asegúrate de tener el entorno virtual activado. Para ejecutar el bot y generar los reportes CSV:
 ```bash
 python main.py
-```
+Iniciar el Dashboard
+Para lanzar la interfaz web con Streamlit:
 
-## 📊 Cómo iniciar el dashboard
+Bash
 
-Para lanzar el dashboard web con Streamlit:
+streamlit run src/dashboard/dashboard.py
+Esto abrirá una nueva pestaña en tu navegador con el dashboard interactivo.
 
-```bash
-streamlit run dashboard.py
-```
+✨ Funcionalidades
+Análisis Dinámico: Obtiene y analiza las principales criptomonedas por capitalización de mercado en tiempo real.
 
-Esto abrirá automáticamente tu navegador web para ver la interfaz interactiva.
+Análisis Técnico Avanzado: Calcula indicadores como RSI, MACD, Medias Móviles y detecta cruces dorados/de la muerte.
 
----
+Dashboard Interactivo: Visualiza, filtra y explora todas las señales generadas con una interfaz amigable.
 
-🧠 Funcionalidades
-• Extracción de datos de criptomonedas desde CoinGecko y Binance
-• Análisis técnico: RSI, MACD, Bollinger Bands, y detección de patrones como Triángulo Dorado
-• Exportación automática de CSVs
-• Visualización gráfica y filtros avanzados con Streamlit
-• Integración con Telegram para envío de señales y notificaciones
-• Ejecución automatizada y sistema de logging avanzado activo
+Configuración Centralizada: Modifica fácilmente el comportamiento del bot a través del archivo config.py.
 
----
+Exportación de Reportes: Genera y guarda automáticamente los resultados en formato CSV.
 
-🛠️ Requisitos
+Notificaciones por Telegram: Envía alertas de señales importantes directamente a tu cuenta de Telegram (configurable).
 
-Instala las dependencias con:
+🧾 Versión
+Este proyecto sigue el estándar Semantic Versioning.
 
-pip install -r requirements.txt
+Versión actual: v1.2.0 (2025-07-28)
+Consulta el archivo CHANGELOG.md para un historial detallado de los cambios.
 
----
+📝 Licencia
+Este proyecto está bajo la Licencia MIT.
 
-📌 Notas adicionales
-• El archivo symbol_map.csv dentro de data/ define qué criptomonedas serán analizadas.
-• Todos los CSV se guardan automáticamente en data/ ordenados por fecha.
-• Los reportes generados se guardan en la carpeta `reports/` en el directorio raíz.
-• Los logs avanzados del sistema se almacenan en logs/ para seguimiento y depuración.
-
-Ejemplo de `symbol_map.csv`:
-
-```
-nombre,símbolo_binance,símbolo_coingecko
-Bitcoin,BTCUSDT,bitcoin
-Ethereum,ETHUSDT,ethereum
-...
-```
-
-```
-
-## 🧾 Versión
-
-Este proyecto sigue el estándar [Semantic Versioning](https://semver.org/).
-
-### Versión actual: `v1.1.1` (2025-07-09)
-
-#### Cambios:
-- Se implementó un dashboard modular con componentes organizados en `dashboard_components/`, facilitando el mantenimiento y la escalabilidad del sistema.
-- Nuevas funcionalidades de exportación de datos, incluyendo opciones desde la interfaz (`export_all_signals_ui`, `chart_export_ui`) para mejorar la experiencia del usuario.
-- Sistema de gestión de favoritos persistente mediante el archivo `favoritas.json` en `data/`.
-- Visualizaciones de correlación y gráficos técnicos con `seaborn` y `matplotlib`, agregando análisis visual más avanzado.
-- Comparador de múltiples archivos de señales con filtros personalizables (RSI, MACD, volumen, etc.).
-- Refactorización del código para separar lógica, mejorar la reutilización y legibilidad.
-- Optimización del diseño visual y la usabilidad general del dashboard.
-
-## 📝 Licencia
-
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
-
-## 👤 Autor
-
+👤 Autor
 Desarrollado por Claudio Esteffan ✨
-```
+````
