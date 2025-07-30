@@ -2,9 +2,17 @@
 
 import os
 from binance.client import Client
+from dotenv import load_dotenv
 from typing import List, Dict, Any
-from .base_exchange import BaseExchangeAdapter
 
+# ✅ Se corrige la ruta para importar la clase base
+from .base_exchange import BaseExchangeAdapter
+from ..logger import configurar_logger
+
+load_dotenv()
+logger = configurar_logger()
+
+# ✅ Se corrige la herencia de la clase
 class BinanceAdapter(BaseExchangeAdapter):
     """
     Adaptador específico para el exchange Binance.
@@ -19,10 +27,8 @@ class BinanceAdapter(BaseExchangeAdapter):
     def get_klines(self, symbol: str, interval: str = '1d', limit: int = 300) -> List[Dict[str, Any]]:
         """
         Obtiene datos de velas (k-lines) desde Binance.
-        Formato de la respuesta adaptado para ser genérico.
         """
         klines = self.client.get_historical_klines(symbol, interval, f"{limit} days ago UTC")
-        # Estructuramos la respuesta para que sea consistente
         formatted_klines = []
         for k in klines:
             formatted_klines.append({

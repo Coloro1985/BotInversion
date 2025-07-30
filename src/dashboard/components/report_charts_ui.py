@@ -1,14 +1,14 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-import config # Importamos config para usar los parámetros
+import config
+from dotenv import load_dotenv
+import os
 
 # --- Imports Corregidos ---
-# ✅ Se importa 'get_historical_klines' desde su nueva ubicación en el adaptador de Binance
-from src.bot.adapters.binance_adapter import get_historical_klines
-# ✅ 'format_klines' sigue viviendo en data_fetcher
+# ✅ Importamos la CLASE, no una función
+from src.bot.adapters.binance_adapter import BinanceAdapter
 from src.bot.data_fetcher import format_klines
-
 
 def render_technical_charts_from_report(df_report: pd.DataFrame):
     st.subheader("📈 Gráficos Técnicos desde Reporte")
@@ -17,7 +17,6 @@ def render_technical_charts_from_report(df_report: pd.DataFrame):
         st.warning("No hay datos en el reporte para mostrar gráficos.")
         return
 
-    # Usamos un slider para no sobrecargar la pantalla con gráficos
     coin_list = df_report['Coin'].unique()
     selected_coin = st.select_slider(
         "Selecciona una moneda del reporte para ver su gráfico:",
@@ -27,13 +26,22 @@ def render_technical_charts_from_report(df_report: pd.DataFrame):
     if selected_coin:
         st.markdown(f"### {selected_coin}")
         try:
-            # Obtenemos los datos históricos para el gráfico
-            klines = get_historical_klines(
-                f"{selected_coin}USDT",
-                config.KLINE_INTERVAL,
-                config.KLINE_PERIOD
+            # --- ✅ Lógica Correcta ---
+            # 1. Cargar las claves de API
+            load_dotenv()
+            api_key = os.getenv("BINANCE_API_KEY")
+            api_secret = os.getenv("BINANCE_SECRET_KEY")
+
+            # 2. Crear una instancia del adaptador
+            adapter = BinanceAdapter(api_key, api_secret)
+
+            # 3. Llamar al método get_klines en la instancia
+            klines = adapter.get_klines(
+                symbol=f"{selected_coin}USDT",
+                interval=config.KLINE_INTERVAL,
+                limit=200 # Usamos un límite fijo para los gráficos
             )
-            df_klines = format_klines(klines)
+            df_klines = pd.DataFrame(klines) # El adapter ya lo formatea
 
             if df_klines.empty:
                 st.warning(f"No se pudieron obtener datos históricos para {selected_coin}.")
@@ -41,7 +49,7 @@ def render_technical_charts_from_report(df_report: pd.DataFrame):
 
             # Crear gráfico de velas (candlestick)
             fig = go.Figure(data=[go.Candlestick(
-                x=pd.to_datetime(df_klines['timestamp'], unit='ms'),
+                x=pd.to_datetime(df_klines['open_time'], unit='ms'),
                 open=df_klines['open'],
                 high=df_klines['high'],
                 low=df_klines['low'],
@@ -53,9 +61,9 @@ def render_technical_charts_from_report(df_report: pd.DataFrame):
                 title=f"{selected_coin} - Gráfico de Velas",
                 xaxis_title="Fecha",
                 yaxis_title="Precio (USD)",
-                xaxis_rangeslider_visible=False # Un slider más limpio para el gráfico
+                xaxis_rangeslider_visible=False
             )
             st.plotly_chart(fig, use_container_width=True)
 
         except Exception as e:
-            st.error(f"Ocurrió un error al cargar los datos técnicos para {selected_coin}: {e}")
+            st.error(f"Ocurrió un error al cargar los datos para {selected_coin}: {e}")
