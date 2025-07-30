@@ -68,3 +68,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Eliminación del archivo duplicado `bot.py` y carpeta `historicos/`.
+
+[2.0.0] - 2025-07-30
+Added
+Gestor de Estrategias (StrategyManager): Se implementó un sistema central para cargar y ejecutar múltiples estrategias de trading definidas en un archivo strategies.yaml.
+
+Nuevas Estrategias de Trading: Se añadieron las estrategias de DCA (Dollar Cost Averaging) y Grid Trading.
+
+Arquitectura de Adaptadores de Exchange: Se creó una clase base (BaseExchange) para abstraer la conexión con los exchanges, facilitando la futura integración de nuevas plataformas. Se incluye un MockAdapter para pruebas.
+
+Servidor de Webhooks: Se añadió un servidor Flask para recibir y procesar alertas de servicios externos como TradingView.
+
+Changed
+Punto de Entrada Unificado: main.py ahora utiliza el StrategyManager como punto de entrada principal, eliminando la lógica de ejecución duplicada.
+
+Modelo de Estrategias: Las estrategias ahora heredan de una clase BaseStrategy, estandarizando su implementación.
+
+Removed
+Se eliminó el archivo run_analysis.py para evitar duplicidad y confusiones en el punto de entrada.

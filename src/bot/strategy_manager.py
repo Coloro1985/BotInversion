@@ -1,62 +1,19 @@
-# src/bot/strategy_manager.py
-
+import yaml
 import time
-import yaml # Usaremos YAML para una configuración más legible
+import importlib
 from typing import Dict, List, Any
-from .adapters.base_exchange import BaseExchangeAdapter
-from .adapters.binance_adapter import BinanceAdapter # Importamos un adaptador concreto
+
+# --- Imports de tu aplicación ---
+from .logger import configurar_logger
+from .adapters.binance_adapter import BinanceAdapter
 from .adapters.mock_adapter import MockExchangeAdapter
 from ..strategies.base_strategy import BaseStrategy
-from ..strategies.dca_bot import DCABotStrategy
-from ..strategies.grid_bot import GridBotStrategy
-from .adapters.mock_adapter import MockExchangeAdapter
-# Mapeo de nombres de estrategia a sus clases correspondientes
-STRATEGY_MAPPING = {
-    'dca': DCABotStrategy,
-    'grid': GridBotStrategy,
-}
 
 class StrategyManager:
     """
     Gestiona el ciclo de vida de múltiples estrategias de trading.
-    Carga, inicia, y ejecuta periódicamente la lógica de cada estrategia activa.
+    Carga, inicia y ejecuta la lógica de cada estrategia activa de forma robusta.
     """
-    def _initialize_strategies(self):
-        """Crea las instancias de las estrategias basadas en la configuración."""
-        print("Inicializando estrategias...")
-        
-        # --- LÓGICA DE SELECCIÓN DE ADAPTADOR ---
-        exchange_type = self.config.get('exchange', 'binance').lower()
-        if exchange_type == 'mock':
-            exchange_adapter = MockExchangeAdapter(self.api_key, self.api_secret)
-        elif exchange_type == 'binance':
-            exchange_adapter = BinanceAdapter(self.api_key, self.api_secret)
-        else:
-            raise ValueError(f"Tipo de exchange '{exchange_type}' no soportado.")
-        
-        if not exchange_adapter.verify_connection():
-             print(f"🛑 ERROR: No se pudo conectar a la API de {exchange_type}.")
-             return
-        # --- FIN DE LA LÓGICA DE SELECCIÓN ---
-
-        for strategy_config in self.config.get('strategies', []):
-            if not strategy_config.get('enabled', False):
-                continue
-
-            strategy_name = strategy_config.get('type')
-            strategy_class = STRATEGY_MAPPING.get(strategy_name)
-
-            if not strategy_class:
-                print(f"ADVERTENCIA: Estrategia '{strategy_name}' no reconocida. Omitiendo.")
-                continue
-
-            symbol = strategy_config.get('symbol')
-            params = strategy_config.get('parameters', {})
-            
-            strategy_instance = strategy_class(exchange_adapter, symbol, params)
-            self.strategies.append(strategy_instance)
-            print(f"Estrategia '{strategy_name}' para '{symbol}' cargada y lista.")
-
     def __init__(self, config_path: str, api_key: str, api_secret: str):
         """
         Inicializa el gestor de estrategias.
@@ -65,92 +22,99 @@ class StrategyManager:
         :param api_key: La clave API para el exchange.
         :param api_secret: El secreto de la API para el exchange.
         """
+        self.logger = configurar_logger()
         self.strategies: List[BaseStrategy] = []
         self.config = self._load_config(config_path)
         self.api_key = api_key
         self.api_secret = api_secret
-        self._initialize_strategies()
+        
+        # ✅ Inyección de Dependencias: Se crea el adaptador de exchange UNA SOLA VEZ.
+        self.exchange_adapter = self._initialize_exchange_adapter()
+        
+        # Si el adaptador se conecta correctamente, inicializamos las estrategias.
+        if self.exchange_adapter:
+            self._initialize_strategies()
 
     def _load_config(self, config_path: str) -> Dict[str, Any]:
         """Carga la configuración de estrategias desde un archivo YAML."""
-        print(f"Cargando configuración desde: {config_path}")
-        with open(config_path, 'r') as f:
-            return yaml.safe_load(f)
+        self.logger.info(f"Cargando configuración desde: {config_path}")
+        try:
+            with open(config_path, 'r') as f:
+                return yaml.safe_load(f)
+        except FileNotFoundError:
+            self.logger.error(f"❌ No se encontró el archivo de configuración en '{config_path}'.")
+            return {}
+        except yaml.YAMLError as e:
+            self.logger.error(f"❌ Error al leer el archivo YAML '{config_path}': {e}")
+            return {}
+
+    def _initialize_exchange_adapter(self):
+        """Crea y verifica la conexión con el adaptador del exchange."""
+        exchange_type = self.config.get('exchange', 'binance').lower()
+        self.logger.info(f"Inicializando adaptador para el exchange: {exchange_type}")
+        
+        adapter = None
+        try:
+            if exchange_type == 'mock':
+                adapter = MockExchangeAdapter()
+            elif exchange_type == 'binance':
+                adapter = BinanceAdapter(self.api_key, self.api_secret)
+            else:
+                raise ValueError(f"Tipo de exchange '{exchange_type}' no soportado.")
+            
+            if not adapter.verify_connection():
+                 self.logger.error(f"🛑 No se pudo verificar la conexión con la API de {exchange_type}.")
+                 return None
+            
+            self.logger.info(f"✅ Conexión con {exchange_type} establecida correctamente.")
+            return adapter
+        except Exception as e:
+            self.logger.error(f"❌ Falló la inicialización del adaptador de exchange: {e}")
+            return None
 
     def _initialize_strategies(self):
         """Crea las instancias de las estrategias basadas en la configuración."""
-        print("Inicializando estrategias...")
+        self.logger.info("Inicializando estrategias...")
         
-        exchange_name = self.config.get("exchange", "binance").lower()
-
-        if exchange_name == "mock":
-            exchange_adapter = MockExchangeAdapter()
-        elif exchange_name == "binance":
-            exchange_adapter = BinanceAdapter(self.api_key, self.api_secret)
-        else:
-            raise ValueError(f"Exchange '{exchange_name}' no soportado.")
-
         for strategy_config in self.config.get('strategies', []):
             if not strategy_config.get('enabled', False):
                 continue
 
-            strategy_name = strategy_config.get('type')
-            strategy_class = STRATEGY_MAPPING.get(strategy_name)
-
-            if not strategy_class:
-                print(f"ADVERTENCIA: Estrategia '{strategy_name}' no reconocida. Omitiendo.")
-                continue
-
-            symbol = strategy_config.get('symbol')
-            params = strategy_config.get('parameters', {})
+            strategy_type = strategy_config.get('type')
             
-            # Creamos la instancia de la estrategia
-            strategy_instance = strategy_class(exchange_adapter, symbol, params)
-            self.strategies.append(strategy_instance)
-            print(f"Estrategia '{strategy_name}' para '{symbol}' cargada y lista.")
+            # ✅ Manejo de Errores en la Carga: Usamos un bloque try-except.
+            # Si una estrategia falla al cargar, el bot no se detiene.
+            try:
+                # Importación dinámica y más segura
+                module_name = strategy_type.lower()
+                class_name = strategy_type.capitalize() + "Strategy" # Asume un patrón como DcaStrategy
+                
+                module = importlib.import_module(f"src.strategies.{module_name}")
+                StrategyClass = getattr(module, class_name)
 
-    def start_all(self):
-        """Inicia todas las estrategias cargadas."""
+                # ✅ Inyección de Dependencias: Pasamos el adaptador ya creado.
+                strategy_instance = StrategyClass(
+                    config=strategy_config,
+                    exchange_adapter=self.exchange_adapter,
+                    logger=self.logger
+                )
+                self.strategies.append(strategy_instance)
+                self.logger.info(f"Estrategia '{strategy_type}' para '{strategy_config.get('symbol')}' cargada y lista.")
+
+            except (ModuleNotFoundError, AttributeError) as e:
+                self.logger.error(f"❌ No se pudo cargar la estrategia '{strategy_type}'. Revisa que el nombre en 'strategies.yaml' y el nombre de la clase/archivo sean correctos. Error: {e}")
+            except Exception as e:
+                self.logger.error(f"❌ Falló la inicialización de la estrategia '{strategy_type}': {e}", exc_info=True)
+
+    def run_all(self):
+        """Ejecuta la lógica principal de todas las estrategias cargadas."""
         if not self.strategies:
-            print("No hay estrategias activas para iniciar.")
+            self.logger.warning("No hay estrategias activas para ejecutar.")
             return
             
-        print("\n--- Iniciando todas las estrategias ---")
+        self.logger.info("\n--- Ejecutando ciclo para todas las estrategias ---")
         for strategy in self.strategies:
-            strategy.start()
-
-    def run_forever(self, interval_seconds: int = 3600):
-        """
-        Bucle principal que ejecuta la lógica de todas las estrategias de forma periódica.
-        
-        :param interval_seconds: Tiempo de espera en segundos entre cada ejecución.
-                                (Ej: 3600 para DCA horario, 60 para Grid más activo).
-        """
-        self.start_all()
-        
-        if not self.strategies:
-            return
-
-        print(f"\n--- Gestor de Estrategias en funcionamiento. Próxima ejecución en {interval_seconds} segundos. ---")
-        while True:
-            for strategy in self.strategies:
-                if strategy.is_running:
-                    try:
-                        trade_signals = strategy.get_trade_signals()
-                        for signal in trade_signals:
-                            action = signal.get("action")
-                            price = signal.get("price")
-                            quantity = signal.get("quantity")
-                            symbol = strategy.symbol
-
-                            print(f"[{strategy.__class__.__name__}] Ejecutando señal: {action.upper()} {quantity} @ {price}")
-                            if action == "buy":
-                                strategy.exchange.create_order(symbol=symbol, order_type="LIMIT", side="BUY", quantity=quantity, price=price)
-                            elif action == "sell":
-                                strategy.exchange.create_order(symbol=symbol, order_type="LIMIT", side="SELL", quantity=quantity, price=price)
-                            else:
-                                print(f"[{strategy.__class__.__name__}] Acción desconocida: {action}")
-                    except Exception as e:
-                        print(f"[{strategy.__class__.__name__}] Error al ejecutar señales: {e}")
-            
-            time.sleep(interval_seconds)
+            try:
+                strategy.run()
+            except Exception as e:
+                self.logger.error(f"❌ Error al ejecutar la estrategia '{strategy.__class__.__name__}': {e}", exc_info=True)

@@ -26,3 +26,6 @@ favoritas.json
 # Archivos de IDEs
 .idea/
 .vscode/
+
+# Archivos de Documentación y Planificación
+*.docx

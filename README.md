@@ -1,104 +1,89 @@
-Markdown
+🤖 Bot de Inversión v2.0.0
+Este proyecto es una plataforma de trading automatizado que ejecuta múltiples estrategias de inversión en el mercado de criptomonedas. Incluye un dashboard interactivo para el análisis de señales y un sistema de ejecución configurable.
 
-# 🤖 Bot de Inversión en Criptomonedas v1.2.0
+📚 Tabla de Contenidos
+Funcionalidades Clave
 
-Este proyecto es un bot de inversión automatizado que utiliza análisis técnico para detectar señales de trading en el mercado de criptomonedas. Incluye un dashboard interactivo desarrollado con Streamlit para visualizar y analizar los datos.
+Estructura del Proyecto
 
-## 📚 Tabla de Contenidos
+Instalación
 
-- [Estructura del Proyecto](#-estructura-del-proyecto)
-- [Instalación](#-instalación)
-- [Configuración](#-configuración)
-- [Cómo Iniciar](#-cómo-iniciar)
-- [Funcionalidades](#-funcionalidades)
-- [Versión](#-versión)
-- [Licencia](#-licencia)
-- [Autor](#-autor)
+Configuración
 
-## 📂 Estructura del Proyecto
+Cómo Iniciar
 
-El proyecto sigue una estructura limpia y escalable, separando el código fuente de los archivos generados.
+Versión
 
-BotInversion/
-├── src/ # Directorio principal del código fuente
-│ ├── bot/ # Lógica principal del bot de análisis
-│ ├── dashboard/ # Código de la aplicación web con Streamlit
-│ └── strategies/ # Estrategias de trading
-├── config.py # Archivo central de configuración
-├── main.py # Punto de entrada para ejecutar el bot
-├── requirements.txt # Dependencias del proyecto
-├── logs/ # Archivos de log generados por el bot
-├── reports/ # Reportes CSV con las señales generadas
-└── README.md # Este archivo
+Autor
 
-## 🧪 Instalación
+✨ Funcionalidades Clave
+Gestor de Estrategias: Ejecuta múltiples bots (Momentum, DCA, Grid Trading) definidos en un archivo strategies.yaml.
 
-1.  **Clona el repositorio:**
-    ```bash
-    git clone [https://github.com/Coloro1985/BotInversion.git](https://github.com/Coloro1985/BotInversion.git)
-    cd BotInversion
-    ```
-2.  **Crea y activa un entorno virtual:**
-    ```bash
-    python -m venv .venv
-    source .venv/bin/activate  # En Mac/Linux
-    # .venv\Scripts\activate   # En Windows
-    ```
-3.  **Instala las dependencias:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+Arquitectura Modular: Permite añadir nuevos exchanges y estrategias de forma sencilla gracias a su diseño basado en clases base.
 
-## ⚙️ Configuración
+Análisis Técnico Avanzado: Calcula indicadores como RSI, MACD, Medias Móviles y detecta patrones de cruce.
 
-1.  **Crea un archivo `.env`** en la raíz del proyecto.
-2.  **Añade tus claves de API de Binance** en el archivo `.env`:
-    ```env
-    BINANCE_API_KEY="TU_API_KEY"
-    BINANCE_SECRET_KEY="TU_SECRET_KEY"
-    ```
-3.  **Ajusta los parámetros del bot** (como el número de monedas a analizar o el intervalo de tiempo) directamente en el archivo `config.py`.
-
-## 🚀 Cómo Iniciar
-
-### Iniciar el Bot de Análisis
-
-Asegúrate de tener el entorno virtual activado. Para ejecutar el bot y generar los reportes CSV:
-
-```bash
-python main.py
-```
-
-Iniciar el Dashboard
-Para lanzar la interfaz web con Streamlit:
-
-```Bash
-streamlit run src/dashboard/dashboard.py
-```
-
-Esto abrirá una nueva pestaña en tu navegador con el dashboard interactivo.
-
-✨ Funcionalidades
-Análisis Dinámico: Obtiene y analiza las principales criptomonedas por capitalización de mercado en tiempo real.
-
-Análisis Técnico Avanzado: Calcula indicadores como RSI, MACD, Medias Móviles y detecta cruces dorados/de la muerte.
+Servidor de Webhooks: Se integra con servicios externos como TradingView para ejecutar operaciones basadas en alertas.
 
 Dashboard Interactivo: Visualiza, filtra y explora todas las señales generadas con una interfaz amigable.
 
-Configuración Centralizada: Modifica fácilmente el comportamiento del bot a través del archivo config.py.
+Configuración Centralizada: Modifica fácilmente el comportamiento global del bot a través de config.py.
 
-Exportación de Reportes: Genera y guarda automáticamente los resultados en formato CSV.
+📂 Estructura del Proyecto
+BotInversion/
+├── src/ # Código fuente de la aplicación
+│ ├── bot/ # Lógica principal del bot y gestor de estrategias
+│ ├── dashboard/ # Aplicación web con Streamlit
+│ └── strategies/ # Implementación de las estrategias de trading
+├── config.py # Configuración global del bot
+├── main.py # Punto de entrada para ejecutar el bot
+├── strategies.yaml # Archivo para definir y configurar las estrategias a ejecutar
+├── requirements.txt # Dependencias del proyecto
+└── README.md # Este archivo
 
-Notificaciones por Telegram: Envía alertas de señales importantes directamente a tu cuenta de Telegram (configurable).
+🧪 Instalación
+Clona el repositorio:
+
+git clone https://github.com/Coloro1985/BotInversion.git
+cd BotInversion
+
+Crea y activa un entorno virtual:
+
+python -m venv .venv
+source .venv/bin/activate # En Mac/Linux
+
+Instala las dependencias:
+
+pip install -r requirements.txt
+
+⚙️ Configuración
+Crea un archivo .env en la raíz del proyecto y añade tus claves de API:
+
+BINANCE_API_KEY="TU_API_KEY"
+BINANCE_SECRET_KEY="TU_SECRET_KEY"
+TELEGRAM_TOKEN="TU_TOKEN_DE_TELEGRAM"
+TELEGRAM_CHAT_ID="TU_CHAT_ID"
+
+Define tus estrategias en el archivo strategies.yaml. Puedes activar, desactivar y configurar los parámetros de cada bot.
+
+Ajusta los parámetros globales en config.py.
+
+🚀 Cómo Iniciar
+Iniciar el Bot
+Ejecuta todas las estrategias activadas en strategies.yaml. El bot se ejecutará una vez al inicio y luego periódicamente.
+
+python main.py
+
+Iniciar el Dashboard de Análisis
+Para visualizar los reportes generados por la estrategia de Momentum:
+
+streamlit run src/dashboard/dashboard.py
 
 🧾 Versión
 Este proyecto sigue el estándar Semantic Versioning.
 
-Versión actual: v1.2.0 (2025-07-28)
+Versión actual: v2.0.0 (2025-07-30)
 Consulta el archivo CHANGELOG.md para un historial detallado de los cambios.
-
-📝 Licencia
-Este proyecto está bajo la Licencia MIT.
 
 👤 Autor
 Desarrollado por Claudio Esteffan ✨
