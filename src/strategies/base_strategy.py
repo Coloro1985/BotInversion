@@ -1,7 +1,7 @@
 # src/strategies/base_strategy.py
 
 from abc import ABC, abstractmethod
-from ..bot.adapters.base_exchange import BaseExchangeAdapter
+from bot.adapters.base_exchange import BaseExchangeAdapter
 
 class BaseStrategy(ABC):
     """

@@ -1,6 +1,8 @@
 import os
+import threading
 from dotenv import load_dotenv
-from .strategy_manager import StrategyManager
+from bot.strategy_manager import StrategyManager
+from webhook_server import run_webhook_server
 
 def run_bot():
     """
@@ -29,16 +31,40 @@ def run_bot():
         return
 
     try:
-        # Inicializar y ejecutar el gestor de estrategias
+        # Inicializar el gestor de estrategias
         manager = StrategyManager(
             config_path=config_path,
             api_key=api_key,
             api_secret=api_secret
         )
-        manager.run_forever(interval_seconds=60) # Ejecuta la lógica cada 60 segundos
 
+        if not manager.strategies:
+            print("No hay estrategias habilitadas en el archivo de configuración. El bot no se iniciará.")
+            return
+
+
+# --- 2. CREACIÓN DE HILOS PARA EJECUCIÓN PARALELA ---
+        # Hilo 1: Ejecuta el bucle principal de las estrategias (DCA, Grid, etc.)
+        # El 'daemon=True' asegura que el hilo se cierre si el programa principal termina.
+        strategy_thread = threading.Thread(target=manager.run_forever, args=(60,), daemon=True)
+        
+        # Hilo 2: Ejecuta el servidor de webhooks de Flask
+        webhook_thread = threading.Thread(target=run_webhook_server, args=(manager,), daemon=True)
+
+        # --- 3. INICIO DE AMBOS HILOS ---
+        print("--- Iniciando motor de estrategias ---")
+        strategy_thread.start()
+        
+        print("--- Iniciando servidor de webhooks ---")
+        webhook_thread.start()
+
+        # Mantenemos el programa principal vivo esperando que los hilos terminen
+        strategy_thread.join()
+        webhook_thread.join()
+
+    except KeyboardInterrupt:
+        print("\n🛑 Proceso interrumpido por el usuario. Cerrando bot...")
     except Exception as e:
-        print(f"Ha ocurrido un error fatal: {e}")
-        # Aquí se podría añadir una notificación por Telegram del error
+        print(f"Ha ocurrido un error fatal en el runner: {e}")
     finally:
         print("El bot ha finalizado su ejecución.")

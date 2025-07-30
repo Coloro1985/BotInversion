@@ -5,10 +5,11 @@ import yaml # Usaremos YAML para una configuración más legible
 from typing import Dict, List, Any
 from .adapters.base_exchange import BaseExchangeAdapter
 from .adapters.binance_adapter import BinanceAdapter # Importamos un adaptador concreto
+from .adapters.mock_adapter import MockExchangeAdapter
 from ..strategies.base_strategy import BaseStrategy
 from ..strategies.dca_bot import DCABotStrategy
 from ..strategies.grid_bot import GridBotStrategy
-
+from .adapters.mock_adapter import MockExchangeAdapter
 # Mapeo de nombres de estrategia a sus clases correspondientes
 STRATEGY_MAPPING = {
     'dca': DCABotStrategy,
@@ -20,6 +21,41 @@ class StrategyManager:
     Gestiona el ciclo de vida de múltiples estrategias de trading.
     Carga, inicia, y ejecuta periódicamente la lógica de cada estrategia activa.
     """
+    def _initialize_strategies(self):
+        """Crea las instancias de las estrategias basadas en la configuración."""
+        print("Inicializando estrategias...")
+        
+        # --- LÓGICA DE SELECCIÓN DE ADAPTADOR ---
+        exchange_type = self.config.get('exchange', 'binance').lower()
+        if exchange_type == 'mock':
+            exchange_adapter = MockExchangeAdapter(self.api_key, self.api_secret)
+        elif exchange_type == 'binance':
+            exchange_adapter = BinanceAdapter(self.api_key, self.api_secret)
+        else:
+            raise ValueError(f"Tipo de exchange '{exchange_type}' no soportado.")
+        
+        if not exchange_adapter.verify_connection():
+             print(f"🛑 ERROR: No se pudo conectar a la API de {exchange_type}.")
+             return
+        # --- FIN DE LA LÓGICA DE SELECCIÓN ---
+
+        for strategy_config in self.config.get('strategies', []):
+            if not strategy_config.get('enabled', False):
+                continue
+
+            strategy_name = strategy_config.get('type')
+            strategy_class = STRATEGY_MAPPING.get(strategy_name)
+
+            if not strategy_class:
+                print(f"ADVERTENCIA: Estrategia '{strategy_name}' no reconocida. Omitiendo.")
+                continue
+
+            symbol = strategy_config.get('symbol')
+            params = strategy_config.get('parameters', {})
+            
+            strategy_instance = strategy_class(exchange_adapter, symbol, params)
+            self.strategies.append(strategy_instance)
+            print(f"Estrategia '{strategy_name}' para '{symbol}' cargada y lista.")
 
     def __init__(self, config_path: str, api_key: str, api_secret: str):
         """
@@ -45,9 +81,14 @@ class StrategyManager:
         """Crea las instancias de las estrategias basadas en la configuración."""
         print("Inicializando estrategias...")
         
-        # Por ahora, creamos un único adaptador. En el futuro, esto podría
-        # modificarse para que cada estrategia use un exchange diferente.
-        exchange_adapter = BinanceAdapter(self.api_key, self.api_secret)
+        exchange_name = self.config.get("exchange", "binance").lower()
+
+        if exchange_name == "mock":
+            exchange_adapter = MockExchangeAdapter()
+        elif exchange_name == "binance":
+            exchange_adapter = BinanceAdapter(self.api_key, self.api_secret)
+        else:
+            raise ValueError(f"Exchange '{exchange_name}' no soportado.")
 
         for strategy_config in self.config.get('strategies', []):
             if not strategy_config.get('enabled', False):
@@ -94,6 +135,22 @@ class StrategyManager:
         while True:
             for strategy in self.strategies:
                 if strategy.is_running:
-                    strategy.run_logic()
+                    try:
+                        trade_signals = strategy.get_trade_signals()
+                        for signal in trade_signals:
+                            action = signal.get("action")
+                            price = signal.get("price")
+                            quantity = signal.get("quantity")
+                            symbol = strategy.symbol
+
+                            print(f"[{strategy.__class__.__name__}] Ejecutando señal: {action.upper()} {quantity} @ {price}")
+                            if action == "buy":
+                                strategy.exchange.create_order(symbol=symbol, order_type="LIMIT", side="BUY", quantity=quantity, price=price)
+                            elif action == "sell":
+                                strategy.exchange.create_order(symbol=symbol, order_type="LIMIT", side="SELL", quantity=quantity, price=price)
+                            else:
+                                print(f"[{strategy.__class__.__name__}] Acción desconocida: {action}")
+                    except Exception as e:
+                        print(f"[{strategy.__class__.__name__}] Error al ejecutar señales: {e}")
             
             time.sleep(interval_seconds)

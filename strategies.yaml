@@ -1,31 +1,47 @@
-# Archivo de configuración para definir las estrategias de trading a ejecutar.
+# --- CONFIGURACIÓN GLOBAL ---
+# Elige 'mock' para simulación segura o 'binance' para operaciones reales.
+exchange: mock
 
+# --- LISTA ÚNICA DE ESTRATEGIAS ---
+# Todas tus estrategias deben estar aquí adentro, una después de la otra.
 strategies:
-  # --- ESTRATEGIA DCA PARA COMPRAR BITCOIN ---
+  # --- ESTRATEGIA 1: DCA para Bitcoin ---
   - name: "DCA_Bitcoin_Diario"
-    enabled: true # Activa o desactiva esta estrategia
-    type: "dca" # Tipo de estrategia (debe coincidir con STRATEGY_MAPPING)
+    enabled: true
+    type: "dca"
     symbol: "BTCUSDT"
     parameters:
-      purchase_amount_usd: 75 # Comprar 75 USD de BTC
-      interval_hours: 24 # cada 24 horas
+      purchase_amount_usd: 75
+      interval_hours: 24
+      # Nuevos campos de riesgo (los implementaremos en el código)
+      take_profit: 55000.50
+      stop_loss: 40000.00
 
-  # --- ESTRATEGIA DE GRID PARA ETHEREUM ---
+  # --- ESTRATEGIA 2: Grid para Ethereum ---
   - name: "Grid_Ethereum_4k-5k"
     enabled: true
     type: "grid"
     symbol: "ETHUSDT"
     parameters:
-      lower_price: 4000 # Límite inferior de la parrilla
-      upper_price: 5000 # Límite superior de la parrilla
-      grid_levels: 15 # Número de líneas en la parrilla
-      investment_per_level_usd: 50 # Inversión por cada orden
+      lower_price: 4000
+      upper_price: 5000
+      grid_levels: 15
+      investment_per_level_usd: 50
+      # Nuevo campo de riesgo (lo implementaremos en el código)
+      stop_loss: 3850.00
 
-  # --- ESTRATEGIA DCA DESACTIVADA ---
+  # --- ESTRATEGIA 3: DCA para Solana (Apagada) ---
+  # Como 'enabled' es false, el bot ignorará esta estrategia.
   - name: "DCA_Solana_Semanal"
-    enabled: false # Este bot no se ejecutará
+    enabled: false
     type: "dca"
     symbol: "SOLUSDT"
     parameters:
       purchase_amount_usd: 100
-      interval_hours: 168 # Semanal
+      interval_hours: 168
+      take_profit: 250.00
+      stop_loss: 150.00
+
+    # El TP es generalmente manejado por la propia lógica del grid,
+    # pero podríamos añadir un TP global si se desea. Por ahora, lo omitimos para el grid.
+    # ---------------------

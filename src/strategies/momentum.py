@@ -1,5 +1,5 @@
 import traceback
-from modules.telegram_utils import send_telegram_message
+from ..bot.telegram_utils import send_telegram_message
 
 def check_price_alerts(coins, symbol_map, binance_client):
     try:

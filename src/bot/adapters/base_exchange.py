@@ -70,3 +70,10 @@ class BaseExchangeAdapter(ABC):
         Verifica que la conexión con la API del exchange es exitosa.
         """
         pass
+
+    @abstractmethod
+    def get_executed_orders(self, symbol: str) -> List[Dict[str, Any]]:
+        """
+        Obtiene las órdenes que fueron ejecutadas recientemente para un símbolo.
+        """
+        pass
